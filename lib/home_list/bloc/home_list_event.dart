@@ -1,20 +1,20 @@
-part of 'home_bloc.dart';
+part of 'home_list_bloc.dart';
 
-class HomeEvent {}
+class HomeListEvent {}
 
-class NextPageEvent extends HomeEvent {
+class NextPageEvent extends HomeListEvent {
   final int amountOfPages;
 
   NextPageEvent({required this.amountOfPages});
 }
 
-class PreviousPageEvent extends HomeEvent {
+class PreviousPageEvent extends HomeListEvent {
   final int amountOfPages;
 
   PreviousPageEvent({required this.amountOfPages});
 }
 
-class SearchCharacterEvent extends HomeEvent {
+class SearchCharacterEvent extends HomeListEvent {
   final String text;
 
   SearchCharacterEvent({required this.text});

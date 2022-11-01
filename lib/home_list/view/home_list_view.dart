@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_urbetrack_challenge/home/bloc/home_bloc.dart';
-import 'package:flutter_urbetrack_challenge/home/widgets/character_card.dart';
-import 'package:flutter_urbetrack_challenge/home/widgets/rounded_grey_container.dart';
+import 'package:flutter_urbetrack_challenge/home_list/bloc/home_list_bloc.dart';
+import 'package:flutter_urbetrack_challenge/home_list/widgets/character_card.dart';
+import 'package:flutter_urbetrack_challenge/home_list/widgets/rounded_grey_container.dart';
 
-class HomeView extends StatelessWidget {
-  const HomeView({Key? key}) : super(key: key);
+class HomeListView extends StatelessWidget {
+  const HomeListView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => HomeBloc(),
+      create: (_) => HomeListBloc(),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -32,7 +32,7 @@ class _SearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
+    return BlocBuilder<HomeListBloc, HomeListState>(
       buildWhen: (previous, current) => current.isSearching != previous.isSearching,
       builder: (context, state) => Container(
         height: 60.0,
@@ -42,7 +42,7 @@ class _SearchField extends StatelessWidget {
           style: const TextStyle(color: Colors.black),
           keyboardType: TextInputType.name,
           autofocus: false,
-          onSubmitted: (value) => BlocProvider.of<HomeBloc>(context).add(SearchCharacterEvent(text: controller.text)),
+          onSubmitted: (value) => BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent(text: controller.text)),
           decoration: InputDecoration(
               prefixIcon: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
@@ -52,7 +52,7 @@ class _SearchField extends StatelessWidget {
                   ? IconButton(
                       onPressed: () {
                         controller.clear();
-                        BlocProvider.of<HomeBloc>(context).add(SearchCharacterEvent(text: controller.text));
+                        BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent(text: controller.text));
                       },
                       icon: Icon(Icons.clear, color: const Color(0xff273037).withOpacity(0.7)))
                   : null,
@@ -143,7 +143,7 @@ class _ListNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
+    final HomeListBloc homeBloc = BlocProvider.of<HomeListBloc>(context);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 25.0),
@@ -166,7 +166,7 @@ class _ListNavigation extends StatelessWidget {
                   iconSize: 12,
                   icon: const Icon(Icons.arrow_back_ios_new)),
             ),
-            BlocBuilder<HomeBloc, HomeState>(
+            BlocBuilder<HomeListBloc, HomeListState>(
               buildWhen: (previous, current) => previous.currentPage != current.currentPage,
               builder: (context, state) => RoundedGreyContianer(
                   child: Text('${state.currentPage}/$amountOfPages',
