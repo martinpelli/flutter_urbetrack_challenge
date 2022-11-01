@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_urbetrack_challenge/navigation/view/navigation_view.dart';
 
 void main() => runApp(const UrbetrackChallenge());
 
@@ -7,18 +8,21 @@ class UrbetrackChallenge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Material App',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Material App Bar'),
-        ),
-        body: Center(
-          child: Container(
-            child: Text('Hello World'),
-          ),
-        ),
-      ),
-    );
+    return MaterialApp(theme: _customThemeData(), title: 'Urbetrack Challenge', home: const NavigationView());
   }
+
+  ThemeData _customThemeData() => ThemeData.dark().copyWith(
+      scaffoldBackgroundColor: const Color(0xff11181E),
+      bottomAppBarColor: const Color(0xff273037),
+      appBarTheme: const AppBarTheme().copyWith(
+        elevation: 0.0,
+        backgroundColor: const Color(0xff273037),
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData().copyWith(
+          elevation: 0.0,
+          backgroundColor: const Color(0xff273037),
+          unselectedLabelStyle: const TextStyle(fontFamily: 'StarJedi', fontSize: 12.0, letterSpacing: 1.0),
+          selectedLabelStyle: const TextStyle(fontFamily: 'StarJedi', fontSize: 12.0, letterSpacing: 1.0),
+          unselectedItemColor: const Color(0xff78828B),
+          selectedItemColor: const Color(0xffE9B042)));
 }
