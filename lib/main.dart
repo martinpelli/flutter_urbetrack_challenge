@@ -8,16 +8,29 @@ class UrbetrackChallenge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(theme: _customThemeData(), title: 'Urbetrack Challenge', home: const NavigationView());
+    return MaterialApp(debugShowCheckedModeBanner: false, theme: _customThemeData(), title: 'Urbetrack Challenge', home: const NavigationView());
   }
 
   ThemeData _customThemeData() => ThemeData.dark().copyWith(
-      scaffoldBackgroundColor: const Color(0xff11181E),
-      bottomAppBarColor: const Color(0xff273037),
+      scaffoldBackgroundColor: Colors.white,
+      iconTheme: const IconThemeData().copyWith(color: const Color(0xffE9B042)),
+      inputDecorationTheme: const InputDecorationTheme().copyWith(
+          labelStyle: const TextStyle(color: Color(0xff273037)),
+          alignLabelWithHint: false,
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          prefixIconColor: const Color(0xff273037),
+          focusedBorder:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: const BorderSide(color: Color(0xff273037), width: 3)),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: const Color(0xff273037).withOpacity(0.7), width: 2))),
       appBarTheme: const AppBarTheme().copyWith(
         elevation: 0.0,
         backgroundColor: const Color(0xff273037),
       ),
+      listTileTheme: const ListTileThemeData().copyWith(
+          tileColor: const Color(0xff273037),
+          contentPadding: const EdgeInsets.all(8.0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData().copyWith(
           elevation: 0.0,
           backgroundColor: const Color(0xff273037),

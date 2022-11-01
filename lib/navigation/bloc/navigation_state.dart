@@ -1,5 +1,11 @@
 part of 'navigation_bloc.dart';
 
-class NavigationState {}
+class NavigationState {
+  final int currentNavIndex;
 
-class NavigationBlocInitialState extends NavigationState {}
+  NavigationState({required this.currentNavIndex});
+}
+
+class NavigationBlocInitialState extends NavigationState {
+  NavigationBlocInitialState() : super(currentNavIndex: 0);
+}

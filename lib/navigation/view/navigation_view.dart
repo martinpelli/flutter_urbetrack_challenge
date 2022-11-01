@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_urbetrack_challenge/home/view/home_view.dart';
+import 'package:flutter_urbetrack_challenge/navigation/bloc/navigation_bloc.dart';
 
 class NavigationView extends StatelessWidget {
   const NavigationView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: _TopBar(),
-      bottomNavigationBar: _BottomBar(),
+    return BlocProvider(
+      create: (context) => NavigationBloc(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: const _TopBar(),
+        body: BlocBuilder<NavigationBloc, NavigationState>(builder: (context, state) {
+          switch (state.currentNavIndex) {
+            default:
+              return const HomeView();
+          }
+        }),
+        bottomNavigationBar: const _BottomBar(),
+      ),
     );
   }
 }
