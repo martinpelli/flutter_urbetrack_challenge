@@ -5,15 +5,15 @@ class NavigationState {
   final String? characterDetails;
 
   NavigationState({required this.currentNavIndex, required this.characterDetails});
+
+  NavigationState copyWith({int? currentNavIndex, String? characterDetails}) =>
+      NavigationState(currentNavIndex: currentNavIndex ?? this.currentNavIndex, characterDetails: characterDetails ?? this.characterDetails);
 }
 
 class NavigationInitialState extends NavigationState {
   NavigationInitialState() : super(currentNavIndex: 0, characterDetails: null);
 }
 
-class NavigationDetailState extends NavigationState {
-  final int navIndex;
-  final String character;
-
-  NavigationDetailState({required this.navIndex, required this.character}) : super(currentNavIndex: navIndex, characterDetails: character);
+class NavigationMainState extends NavigationState {
+  NavigationMainState() : super(currentNavIndex: 1, characterDetails: null);
 }

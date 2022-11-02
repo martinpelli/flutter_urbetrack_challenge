@@ -9,3 +9,9 @@ class GoToHomeDetailEvent extends NavigationEvent {
 }
 
 class PopHomeDetailEvent extends NavigationEvent {}
+
+class ChangePageEvent extends NavigationEvent {
+  final int navIndex;
+
+  ChangePageEvent({required this.navIndex});
+}

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_urbetrack_challenge/home_detail/widgets/carousel_cards.dart';
+import 'package:flutter_urbetrack_challenge/main/bloc/main_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../widgets/info_item.dart';
@@ -102,6 +104,14 @@ class _ReportButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(width: double.infinity, height: 50, child: ElevatedButton(onPressed: () {}, child: Text("Reportar Avistamiento")));
+    return SizedBox(
+        width: double.infinity,
+        height: 50,
+        child: BlocBuilder<MainBloc, MainState>(
+            builder: (context, state) => MaterialButton(
+                disabledColor: Colors.grey,
+                color: const Color(0xffE9B042),
+                onPressed: state.isEnabled ? () {} : null,
+                child: const Text("Reportar Avistamiento"))));
   }
 }
