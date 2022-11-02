@@ -14,6 +14,7 @@ class UrbetrackChallenge extends StatelessWidget {
   ThemeData _customThemeData() => ThemeData.dark().copyWith(
       scaffoldBackgroundColor: Colors.white,
       iconTheme: const IconThemeData().copyWith(color: const Color(0xffE9B042)),
+      elevatedButtonTheme: ElevatedButtonThemeData(style: ButtonStyle(backgroundColor: MaterialStateProperty.all(const Color(0xffE9B042)))),
       inputDecorationTheme: const InputDecorationTheme().copyWith(
           labelStyle: const TextStyle(color: Color(0xff273037)),
           alignLabelWithHint: false,

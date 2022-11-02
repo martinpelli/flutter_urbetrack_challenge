@@ -10,6 +10,6 @@ class HomeListState {
       HomeListState(currentPage: currentPage ?? this.currentPage, isSearching: isSearching ?? this.isSearching);
 }
 
-class HomeInitialState extends HomeListState {
-  HomeInitialState() : super(currentPage: 1, isSearching: false);
+class HomeListInitialState extends HomeListState {
+  HomeListInitialState() : super(currentPage: 1, isSearching: false);
 }

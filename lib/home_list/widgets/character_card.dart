@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_urbetrack_challenge/navigation/bloc/navigation_bloc.dart';
 
 class CharacterCard extends StatelessWidget {
   final String name;
@@ -13,7 +15,7 @@ class CharacterCard extends StatelessWidget {
       child: Material(
         type: MaterialType.transparency,
         child: ListTile(
-          onTap: () {},
+          onTap: () => BlocProvider.of<NavigationBloc>(context).add(GoToHomeDetailEvent(character: name)),
           leading: const Padding(
             padding: EdgeInsets.only(left: 10.0),
             child: Icon(

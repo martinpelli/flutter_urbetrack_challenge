@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_urbetrack_challenge/home_detail/view/home_detail_view.dart';
 import 'package:flutter_urbetrack_challenge/home_list/view/home_list_view.dart';
 import 'package:flutter_urbetrack_challenge/navigation/bloc/navigation_bloc.dart';
 
@@ -9,14 +10,20 @@ class NavigationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => NavigationBloc(),
+      create: (_) => NavigationBloc(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: const _TopBar(),
         body: BlocBuilder<NavigationBloc, NavigationState>(builder: (context, state) {
           switch (state.currentNavIndex) {
             default:
-              return const HomeListView();
+              if (state is NavigationDetailState) {
+                return HomeDetailView(
+                  character: state.character,
+                );
+              } else {
+                return const HomeListView();
+              }
           }
         }),
         bottomNavigationBar: const _BottomBar(),
@@ -32,10 +39,20 @@ class _TopBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text(
-        'Star Wars',
-        style: TextStyle(fontFamily: 'StarJedi', fontSize: 22.0, color: Color(0xffE9B042)),
+    return BlocBuilder<NavigationBloc, NavigationState>(
+      buildWhen: (previous, current) => previous.characterDetails != current.characterDetails,
+      builder: (context, state) => AppBar(
+        leading: (state is NavigationDetailState)
+            ? IconButton(
+                onPressed: () {
+                  BlocProvider.of<NavigationBloc>(context).add(PopHomeDetailEvent());
+                },
+                icon: const Icon(Icons.arrow_back))
+            : null,
+        title: const Text(
+          'Star Wars',
+          style: TextStyle(fontFamily: 'StarJedi', fontSize: 22.0, color: Color(0xffE9B042)),
+        ),
       ),
     );
   }

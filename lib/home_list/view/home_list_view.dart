@@ -15,7 +15,7 @@ class HomeListView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           _SearchField(),
-          SizedBox(height: 18.0),
+          const SizedBox(height: 18.0),
           _Body(),
         ],
       ),
@@ -56,7 +56,7 @@ class _SearchField extends StatelessWidget {
                       },
                       icon: Icon(Icons.clear, color: const Color(0xff273037).withOpacity(0.7)))
                   : null,
-              labelText: "Buscar personajes"),
+              labelText: "Buscar personaje..."),
         ),
       ),
     );
@@ -83,11 +83,11 @@ class _Body extends StatelessWidget {
         gender: "Male",
       ),
       CharacterCard(
-        name: "Obi Wan Kenobi",
+        name: "Obi",
         gender: "Male",
       ),
       CharacterCard(
-        name: "Obi Wan Kenobi",
+        name: "Obi Wan ",
         gender: "Male",
       ),
       CharacterCard(
@@ -155,14 +155,7 @@ class _ListNavigation extends StatelessWidget {
             RoundedGreyContianer(
               child: IconButton(
                   constraints: const BoxConstraints(maxWidth: 40, maxHeight: 40, minHeight: 35, minWidth: 35),
-                  onPressed: amountOfPages <= 1
-                      ? null
-                      : () {
-                          (homeBloc.state.currentPage - 1) <= 0
-                              ? controller.animateToPage(amountOfPages - 1, duration: const Duration(milliseconds: 200), curve: Curves.easeIn)
-                              : controller.previousPage(duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
-                          homeBloc.add(PreviousPageEvent(amountOfPages: amountOfPages));
-                        },
+                  onPressed: amountOfPages <= 1 ? null : () => homeBloc.add(PreviousPageEvent(amountOfPages: amountOfPages, controller: controller)),
                   iconSize: 12,
                   icon: const Icon(Icons.arrow_back_ios_new)),
             ),
@@ -175,14 +168,7 @@ class _ListNavigation extends StatelessWidget {
             RoundedGreyContianer(
               child: IconButton(
                   constraints: const BoxConstraints(maxWidth: 40, maxHeight: 40, minHeight: 35, minWidth: 35),
-                  onPressed: amountOfPages <= 1
-                      ? null
-                      : () {
-                          (homeBloc.state.currentPage + 1) > amountOfPages
-                              ? controller.animateToPage(0, duration: const Duration(milliseconds: 200), curve: Curves.easeIn)
-                              : controller.nextPage(duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
-                          homeBloc.add(NextPageEvent(amountOfPages: amountOfPages));
-                        },
+                  onPressed: amountOfPages <= 1 ? null : () => homeBloc.add(NextPageEvent(amountOfPages: amountOfPages, controller: controller)),
                   iconSize: 12,
                   alignment: Alignment.center,
                   icon: const Icon(

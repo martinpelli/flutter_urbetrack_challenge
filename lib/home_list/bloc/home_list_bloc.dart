@@ -1,17 +1,32 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'home_list_event.dart';
 part 'home_list_state.dart';
 
 class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
-  HomeListBloc() : super(HomeInitialState()) {
+  HomeListBloc() : super(HomeListInitialState()) {
     on<NextPageEvent>((event, emit) {
-      final int newPage = (state.currentPage + 1) > event.amountOfPages ? 1 : state.currentPage + 1;
+      final int newPage;
+      if ((state.currentPage + 1) > event.amountOfPages) {
+        newPage = 1;
+        event.controller.animateToPage(0, duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
+      } else {
+        newPage = state.currentPage + 1;
+        event.controller.nextPage(duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
+      }
       emit(state.copyWith(currentPage: newPage));
     });
 
     on<PreviousPageEvent>((event, emit) {
-      final int newPage = (state.currentPage - 1) <= 0 ? event.amountOfPages : state.currentPage - 1;
+      final int newPage;
+      if ((state.currentPage - 1) <= 0) {
+        newPage = event.amountOfPages;
+        event.controller.animateToPage(event.amountOfPages - 1, duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
+      } else {
+        newPage = state.currentPage - 1;
+        event.controller.previousPage(duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
+      }
       emit(state.copyWith(currentPage: newPage));
     });
 
