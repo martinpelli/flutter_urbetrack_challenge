@@ -22,7 +22,7 @@ Character _$CharacterFromJson(Map<String, dynamic> json) {
 mixin _$Character {
   String get name => throw _privateConstructorUsedError;
   String get gender => throw _privateConstructorUsedError;
-  int get birth_year => throw _privateConstructorUsedError;
+  String get birth_year => throw _privateConstructorUsedError;
   String get eye_color => throw _privateConstructorUsedError;
   String get hair_color => throw _privateConstructorUsedError;
   String get height => throw _privateConstructorUsedError;
@@ -45,7 +45,7 @@ abstract class $CharacterCopyWith<$Res> {
   $Res call(
       {String name,
       String gender,
-      int birth_year,
+      String birth_year,
       String eye_color,
       String hair_color,
       String height,
@@ -91,7 +91,7 @@ class _$CharacterCopyWithImpl<$Res, $Val extends Character>
       birth_year: null == birth_year
           ? _value.birth_year
           : birth_year // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       eye_color: null == eye_color
           ? _value.eye_color
           : eye_color // ignore: cast_nullable_to_non_nullable
@@ -134,7 +134,7 @@ abstract class _$$_CharacterCopyWith<$Res> implements $CharacterCopyWith<$Res> {
   $Res call(
       {String name,
       String gender,
-      int birth_year,
+      String birth_year,
       String eye_color,
       String hair_color,
       String height,
@@ -178,7 +178,7 @@ class __$$_CharacterCopyWithImpl<$Res>
       birth_year: null == birth_year
           ? _value.birth_year
           : birth_year // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       eye_color: null == eye_color
           ? _value.eye_color
           : eye_color // ignore: cast_nullable_to_non_nullable
@@ -213,7 +213,7 @@ class __$$_CharacterCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Character implements _Character {
+class _$_Character extends _Character {
   const _$_Character(
       {required this.name,
       required this.gender,
@@ -226,7 +226,8 @@ class _$_Character implements _Character {
       required final List<String> starships,
       required final List<String> vehicles})
       : _starships = starships,
-        _vehicles = vehicles;
+        _vehicles = vehicles,
+        super._();
 
   factory _$_Character.fromJson(Map<String, dynamic> json) =>
       _$$_CharacterFromJson(json);
@@ -236,7 +237,7 @@ class _$_Character implements _Character {
   @override
   final String gender;
   @override
-  final int birth_year;
+  final String birth_year;
   @override
   final String eye_color;
   @override
@@ -317,11 +318,11 @@ class _$_Character implements _Character {
   }
 }
 
-abstract class _Character implements Character {
+abstract class _Character extends Character {
   const factory _Character(
       {required final String name,
       required final String gender,
-      required final int birth_year,
+      required final String birth_year,
       required final String eye_color,
       required final String hair_color,
       required final String height,
@@ -329,6 +330,7 @@ abstract class _Character implements Character {
       required final String mass,
       required final List<String> starships,
       required final List<String> vehicles}) = _$_Character;
+  const _Character._() : super._();
 
   factory _Character.fromJson(Map<String, dynamic> json) =
       _$_Character.fromJson;
@@ -338,7 +340,7 @@ abstract class _Character implements Character {
   @override
   String get gender;
   @override
-  int get birth_year;
+  String get birth_year;
   @override
   String get eye_color;
   @override

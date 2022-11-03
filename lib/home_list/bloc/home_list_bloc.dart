@@ -1,6 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../api/api_client.dart';
+import '../../models/people/people_model.dart';
+
 part 'home_list_event.dart';
 part 'home_list_state.dart';
 
@@ -38,5 +41,12 @@ class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
       print("searching");
       emit(state.copyWith(isSearching: true));
     });
+
+    on<GetPeopleEvent>((event, emit) async {
+      final People people = await ApiClient.getPeople();
+      emit(state.copyWith(people: people));
+    });
+
+    add(GetPeopleEvent());
   }
 }

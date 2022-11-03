@@ -5,10 +5,12 @@ part 'character_model.g.dart';
 
 @freezed
 class Character with _$Character {
+  const Character._();
+
   const factory Character(
       {required String name,
       required String gender,
-      required int birth_year,
+      required String birth_year,
       required String eye_color,
       required String hair_color,
       required String height,

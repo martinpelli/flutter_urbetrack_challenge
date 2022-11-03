@@ -21,3 +21,5 @@ class SearchCharacterEvent extends HomeListEvent {
 
   SearchCharacterEvent({required this.text});
 }
+
+class GetPeopleEvent extends HomeListEvent {}

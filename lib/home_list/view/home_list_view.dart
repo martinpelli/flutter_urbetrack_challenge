@@ -4,6 +4,8 @@ import 'package:flutter_urbetrack_challenge/home_list/bloc/home_list_bloc.dart';
 import 'package:flutter_urbetrack_challenge/home_list/widgets/character_card.dart';
 import 'package:flutter_urbetrack_challenge/home_list/widgets/rounded_grey_container.dart';
 
+import '../../models/character/character_model.dart';
+
 class HomeListView extends StatelessWidget {
   const HomeListView({Key? key}) : super(key: key);
 
@@ -73,49 +75,29 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
-    final characterCards = [
-      CharacterCard(
-        name: "Obi Wan Kenobi",
-        gender: "Male",
-      ),
-      CharacterCard(
-        name: "Obi Wan Kenobi",
-        gender: "Male",
-      ),
-      CharacterCard(
-        name: "Obi",
-        gender: "Male",
-      ),
-      CharacterCard(
-        name: "Obi Wan ",
-        gender: "Male",
-      ),
-      CharacterCard(
-        name: "Obi Wan Kenobi",
-        gender: "Male",
-      ),
-    ];
-
     final double characterListHeight = MediaQuery.of(context).size.height - 325.0;
-    final int amountOfCharactersCardToShow = (characterListHeight / 100.0).floor();
-    final int amountOfPages = (characterCards.length / amountOfCharactersCardToShow).ceil();
+
     return Container(
       decoration: const BoxDecoration(
         color: Color(0xff11181E),
         borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
       ),
       height: screenHeight * 0.70,
-      child: Column(
-        children: [
-          const _Title(),
-          _ListNavigation(amountOfPages: amountOfPages, controller: controller),
-          _CharacterList(
-              amountOfPages: amountOfPages,
-              amountOfCardsToShow: amountOfCharactersCardToShow,
-              characterCards: characterCards,
-              controller: controller),
-        ],
-      ),
+      child: BlocBuilder<HomeListBloc, HomeListState>(builder: (context, state) {
+        final int amountOfCharactersCardToShow = (characterListHeight / 100.0).floor();
+        final int amountOfPages = state.people != null ? (state.people!.results.length / amountOfCharactersCardToShow).ceil() : 0;
+        return Column(
+          children: [
+            const _Title(),
+            _ListNavigation(amountOfPages: amountOfPages, controller: controller),
+            _CharacterList(
+                amountOfPages: amountOfPages,
+                amountOfCardsToShow: amountOfCharactersCardToShow,
+                characters: (state.people != null) ? state.people!.results : [],
+                controller: controller),
+          ],
+        );
+      }),
     );
   }
 }
@@ -185,14 +167,14 @@ class _ListNavigation extends StatelessWidget {
 class _CharacterList extends StatelessWidget {
   final int amountOfPages;
   final int amountOfCardsToShow;
-  final List<CharacterCard> characterCards;
+  final List<Character> characters;
   final PageController controller;
 
   const _CharacterList({
     Key? key,
     required this.amountOfPages,
     required this.amountOfCardsToShow,
-    required this.characterCards,
+    required this.characters,
     required this.controller,
   }) : super(key: key);
 
@@ -208,8 +190,8 @@ class _CharacterList extends StatelessWidget {
               itemCount: amountOfCardsToShow,
               itemBuilder: ((_, cardIndex) {
                 final int arrayIndex = (amountOfCardsToShow * pageIndex) + cardIndex;
-                if (arrayIndex < characterCards.length) {
-                  return characterCards[arrayIndex];
+                if (arrayIndex < characters.length) {
+                  return CharacterCard(name: characters[arrayIndex].name, gender: characters[arrayIndex].gender);
                 } else {
                   return Container();
                 }

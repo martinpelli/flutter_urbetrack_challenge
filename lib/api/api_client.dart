@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_urbetrack_challenge/models/character_model.dart';
-import 'package:retrofit/retrofit.dart';
+import 'package:flutter_urbetrack_challenge/models/people/people_model.dart';
 
-part 'api_client.g.dart';
+class ApiClient {
+  static final Dio _dio = Dio();
+  static const String _baseUrl = "https://swapi.dev/api";
 
-@RestApi(baseUrl: "https://swapi.dev/api/")
-abstract class ApiClient {
-  factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
-
-  @GET("/people")
-  Future<List<Character>> getAllCharacters();
+  static Future<People> getPeople() async {
+    const String path = "/people";
+    var response = await _dio.get(_baseUrl + path);
+    final People people = People.fromJson(response.data);
+    return people;
+  }
 }
