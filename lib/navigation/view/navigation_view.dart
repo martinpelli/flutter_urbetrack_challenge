@@ -6,13 +6,19 @@ import 'package:flutter_urbetrack_challenge/main/bloc/main_bloc.dart';
 import 'package:flutter_urbetrack_challenge/main/view/main_view.dart';
 import 'package:flutter_urbetrack_challenge/navigation/bloc/navigation_bloc.dart';
 
+import '../../home_list/bloc/home_list_bloc.dart';
+
 class NavigationView extends StatelessWidget {
   const NavigationView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => NavigationBloc()), BlocProvider(create: (_) => MainBloc())],
+      providers: [
+        BlocProvider(create: (_) => NavigationBloc()),
+        BlocProvider(create: (_) => MainBloc()),
+        BlocProvider(create: (_) => HomeListBloc())
+      ],
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: const _TopBar(),

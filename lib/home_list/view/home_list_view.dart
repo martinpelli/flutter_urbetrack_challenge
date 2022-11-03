@@ -11,16 +11,13 @@ class HomeListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => HomeListBloc(),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          _SearchField(),
-          const SizedBox(height: 18.0),
-          _Body(),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        _SearchField(),
+        const SizedBox(height: 18.0),
+        _Body(),
+      ],
     );
   }
 }
