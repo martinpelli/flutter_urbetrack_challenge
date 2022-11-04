@@ -6,9 +6,10 @@ import 'package:flutter_urbetrack_challenge/navigation/bloc/navigation_bloc.dart
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CharacterCard extends StatelessWidget {
+  final int index;
   final Character character;
 
-  const CharacterCard({Key? key, required this.character}) : super(key: key);
+  const CharacterCard({Key? key, required this.character, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class CharacterCard extends StatelessWidget {
         type: MaterialType.transparency,
         child: ListTile(
           onTap: () {
-            BlocProvider.of<NavigationBloc>(context).add(GoToHomeDetailEvent(character: character));
+            BlocProvider.of<NavigationBloc>(context).add(GoToHomeDetailEvent(characterId: index, character: character));
             BlocProvider.of<HomeListBloc>(context).add(RemoveControllerEvent());
           },
           leading: const Padding(

@@ -203,7 +203,7 @@ class _CharacterList extends StatelessWidget {
                           return Container();
                         }
 
-                        return CharacterCard(character: characters[arrayIndex]);
+                        return CharacterCard(index: arrayIndex, character: characters[arrayIndex]);
                       }),
                       separatorBuilder: (_, __) => const SizedBox(height: 8.0))),
             ),

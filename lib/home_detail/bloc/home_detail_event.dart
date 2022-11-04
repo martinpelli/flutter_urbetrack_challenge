@@ -21,3 +21,10 @@ class GetStarshipsEvent extends HomeDetailEvent {
 }
 
 class ResetDetailsEvent extends HomeDetailEvent {}
+
+class ReportSightingEvent extends HomeDetailEvent {
+  final int userId;
+  final String name;
+
+  ReportSightingEvent({required this.userId, required this.name});
+}

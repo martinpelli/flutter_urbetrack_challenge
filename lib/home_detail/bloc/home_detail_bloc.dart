@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_urbetrack_challenge/api/api_client.dart';
 import 'package:flutter_urbetrack_challenge/models/homeworld/homeworld_model.dart';
@@ -44,5 +45,16 @@ class HomeDetailBloc extends Bloc<HomeDetailEvent, HomeDetailState> {
     });
 
     on<ResetDetailsEvent>((event, emit) => emit(HomeDetailInitialState()));
+
+    on<ReportSightingEvent>((event, emit) async {
+      emit(state.copyWith(snackBarMessage: 'Enviando reporte'));
+      final Map<String, dynamic> data = {"userId": event.userId, "dateTime": DateTime.now().toString(), "character_name": event.name};
+      final Response response = await ApiClient.reportSighting(data);
+      if (response.statusCode == 201) {
+        emit(state.copyWith(snackBarMessage: 'Reporte enviado'));
+        return;
+      }
+      emit(state.copyWith(snackBarMessage: 'Ocurrió un error en el reporte'));
+    });
   }
 }

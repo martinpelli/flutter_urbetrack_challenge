@@ -7,7 +7,7 @@ part 'navigation_state.dart';
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   NavigationBloc() : super(NavigationInitialState()) {
     on<GoToHomeDetailEvent>((event, emit) {
-      emit(state.copyWith(currentNavIndex: state.currentNavIndex, character: event.character));
+      emit(state.copyWith(currentNavIndex: state.currentNavIndex, characterId: event.characterId, character: event.character));
     });
 
     on<PopHomeDetailEvent>((event, emit) {

@@ -3,9 +3,10 @@ part of 'navigation_bloc.dart';
 class NavigationEvent {}
 
 class GoToHomeDetailEvent extends NavigationEvent {
+  final int characterId;
   final Character character;
 
-  GoToHomeDetailEvent({required this.character});
+  GoToHomeDetailEvent({required this.character, required this.characterId});
 }
 
 class PopHomeDetailEvent extends NavigationEvent {}

@@ -31,6 +31,7 @@ class NavigationView extends StatelessWidget {
             default:
               if (state.character != null) {
                 return HomeDetailView(
+                  characterId: state.characterId!,
                   character: state.character!,
                 );
               } else {

@@ -32,4 +32,9 @@ class ApiClient {
     final Starship starships = Starship.fromJson(response.data);
     return starships;
   }
+
+  static Future<Response> reportSighting(Map<String, dynamic> data) async {
+    const String baseUrl = "https://jsonplaceholder.typicode.com/posts";
+    return await _dio.post(baseUrl, data: data);
+  }
 }

@@ -2,18 +2,19 @@ part of 'navigation_bloc.dart';
 
 class NavigationState {
   final int currentNavIndex;
+  final int? characterId;
   final Character? character;
 
-  NavigationState({required this.currentNavIndex, required this.character});
+  NavigationState({required this.currentNavIndex, required this.characterId, required this.character});
 
-  NavigationState copyWith({int? currentNavIndex, Character? character}) =>
-      NavigationState(currentNavIndex: currentNavIndex ?? this.currentNavIndex, character: character ?? this.character);
+  NavigationState copyWith({int? currentNavIndex, int? characterId, Character? character}) => NavigationState(
+      currentNavIndex: currentNavIndex ?? this.currentNavIndex, characterId: characterId ?? this.characterId, character: character ?? this.character);
 }
 
 class NavigationInitialState extends NavigationState {
-  NavigationInitialState() : super(currentNavIndex: 0, character: null);
+  NavigationInitialState() : super(currentNavIndex: 0, character: null, characterId: null);
 }
 
 class NavigationMainState extends NavigationState {
-  NavigationMainState() : super(currentNavIndex: 1, character: null);
+  NavigationMainState() : super(currentNavIndex: 1, character: null, characterId: null);
 }

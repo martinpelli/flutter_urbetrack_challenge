@@ -10,8 +10,9 @@ import '../widgets/info_item.dart';
 
 class HomeDetailView extends StatelessWidget {
   final Character character;
+  final int characterId;
 
-  const HomeDetailView({Key? key, required this.character}) : super(key: key);
+  const HomeDetailView({Key? key, required this.character, required this.characterId}) : super(key: key);
 
   final titlesStyle = const TextStyle(fontWeight: FontWeight.bold, fontSize: 15);
 
@@ -35,7 +36,7 @@ class HomeDetailView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _TitleName(name: character.name),
-            _Details(character: character, titlesStyle: titlesStyle),
+            _Details(characterId: characterId, character: character, titlesStyle: titlesStyle),
           ],
         ),
       ),
@@ -63,11 +64,13 @@ class _TitleName extends StatelessWidget {
 
 class _Details extends StatelessWidget {
   final Character character;
+  final int characterId;
 
   const _Details({
     Key? key,
     required this.titlesStyle,
     required this.character,
+    required this.characterId,
   }) : super(key: key);
 
   final TextStyle titlesStyle;
@@ -76,7 +79,9 @@ class _Details extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       fit: FlexFit.loose,
-      child: BlocBuilder<HomeDetailBloc, HomeDetailState>(
+      child: BlocConsumer<HomeDetailBloc, HomeDetailState>(
+        listenWhen: (previous, current) => previous.snackBarMessage != current.snackBarMessage && current.snackBarMessage.isNotEmpty,
+        listener: (context, state) => ScaffoldMessenger.of(context).showSnackBar(customSnackbar(state.snackBarMessage)),
         builder: (context, state) => ListView(
           shrinkWrap: true,
           physics: const BouncingScrollPhysics(),
@@ -113,7 +118,7 @@ class _Details extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            const _ReportButton(),
+            _ReportButton(characterId: characterId, name: character.name, snackBarMessage: state.snackBarMessage),
             const SizedBox(
               height: 20,
             ),
@@ -122,11 +127,25 @@ class _Details extends StatelessWidget {
       ),
     );
   }
+
+  SnackBar customSnackbar(String message) {
+    return SnackBar(
+        duration: const Duration(seconds: 1),
+        backgroundColor: const Color(0xff273037),
+        content: Text(message, style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600)));
+  }
 }
 
 class _ReportButton extends StatelessWidget {
+  final int characterId;
+  final String name;
+  final String snackBarMessage;
+
   const _ReportButton({
     Key? key,
+    required this.characterId,
+    required this.name,
+    required this.snackBarMessage,
   }) : super(key: key);
 
   @override
@@ -138,7 +157,9 @@ class _ReportButton extends StatelessWidget {
             builder: (context, state) => MaterialButton(
                 disabledColor: Colors.grey,
                 color: const Color(0xffE9B042),
-                onPressed: state.isEnabled ? () {} : null,
+                onPressed: state.isEnabled && snackBarMessage != "Enviando reporte"
+                    ? () => BlocProvider.of<HomeDetailBloc>(context).add(ReportSightingEvent(userId: characterId, name: name))
+                    : null,
                 child: const Text("Reportar Avistamiento"))));
   }
 }
