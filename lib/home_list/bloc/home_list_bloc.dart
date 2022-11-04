@@ -68,7 +68,9 @@ class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
       }
     });
 
-    on<RemoveControllerEvent>(((event, emit) => controller.dispose()));
+    on<RemoveControllerEvent>(((event, emit) {
+      if (controller.hasClients) controller.dispose();
+    }));
 
     on<RestorePageEvent>((event, emit) async {
       controller = PageController(initialPage: state.currentPage - 1);

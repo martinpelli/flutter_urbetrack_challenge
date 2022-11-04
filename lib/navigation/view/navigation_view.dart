@@ -89,7 +89,14 @@ class _BottomBar extends StatelessWidget {
         buildWhen: (previous, current) => previous.currentNavIndex != current.currentNavIndex,
         builder: (context, state) => BottomNavigationBar(
             currentIndex: state.currentNavIndex,
-            onTap: (value) => BlocProvider.of<NavigationBloc>(context).add(ChangePageEvent(navIndex: value)),
+            onTap: (value) {
+              if (value == 0) {
+                BlocProvider.of<HomeListBloc>(context).add(RestorePageEvent());
+              } else {
+                BlocProvider.of<HomeListBloc>(context).add(RemoveControllerEvent());
+              }
+              BlocProvider.of<NavigationBloc>(context).add(ChangePageEvent(navIndex: value));
+            },
             items: const [
               BottomNavigationBarItem(
                   icon: Icon(

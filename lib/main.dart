@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_urbetrack_challenge/navigation/view/navigation_view.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() => runApp(const UrbetrackChallenge());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final storage = await HydratedStorage.build(
+    storageDirectory: await getApplicationDocumentsDirectory(),
+  );
+  HydratedBlocOverrides.runZoned(() => runApp(const UrbetrackChallenge()), storage: storage);
+}
 
 class UrbetrackChallenge extends StatelessWidget {
   const UrbetrackChallenge({super.key});

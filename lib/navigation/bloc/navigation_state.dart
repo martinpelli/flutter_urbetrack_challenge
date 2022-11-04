@@ -9,6 +9,11 @@ class NavigationState {
 
   NavigationState copyWith({int? currentNavIndex, int? characterId, Character? character}) => NavigationState(
       currentNavIndex: currentNavIndex ?? this.currentNavIndex, characterId: characterId ?? this.characterId, character: character ?? this.character);
+
+  factory NavigationState.fromJson(Map<String, dynamic> json) =>
+      NavigationState(characterId: json['characterId'], character: json['character'], currentNavIndex: json['currentNavIndex'] ?? 0);
+
+  Map<String, dynamic> toJson() => {"characterId": characterId, "character": character, "currentNavIndex": currentNavIndex};
 }
 
 class NavigationInitialState extends NavigationState {
