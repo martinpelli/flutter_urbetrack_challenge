@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_urbetrack_challenge/home_detail/bloc/home_detail_bloc.dart';
 import 'package:flutter_urbetrack_challenge/home_detail/widgets/carousel_cards.dart';
 import 'package:flutter_urbetrack_challenge/main/bloc/main_bloc.dart';
+import 'package:flutter_urbetrack_challenge/models/character/character_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../widgets/info_item.dart';
 
 class HomeDetailView extends StatelessWidget {
-  final String character;
+  final Character character;
 
   const HomeDetailView({Key? key, required this.character}) : super(key: key);
 
@@ -15,6 +17,11 @@ class HomeDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final HomeDetailBloc homeDetailBloc = BlocProvider.of<HomeDetailBloc>(context);
+    homeDetailBloc.add(GetHomeworldEvent(homeWorld: character.homeworld));
+    homeDetailBloc.add(GetVehiclesEvent(vehicles: character.vehicles));
+    homeDetailBloc.add(GetStarshipsEvent(starships: character.starships));
+
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -27,8 +34,8 @@ class HomeDetailView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _TitleName(name: character),
-            _Details(titlesStyle: titlesStyle),
+            _TitleName(name: character.name),
+            _Details(character: character, titlesStyle: titlesStyle),
           ],
         ),
       ),
@@ -55,9 +62,12 @@ class _TitleName extends StatelessWidget {
 }
 
 class _Details extends StatelessWidget {
+  final Character character;
+
   const _Details({
     Key? key,
     required this.titlesStyle,
+    required this.character,
   }) : super(key: key);
 
   final TextStyle titlesStyle;
@@ -66,32 +76,49 @@ class _Details extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       fit: FlexFit.loose,
-      child: ListView(
-        shrinkWrap: true,
-        physics: const BouncingScrollPhysics(),
-        children: [
-          InfoItem(titleText: "Nacimiento", text: "20-20-2000", titlesStyle: titlesStyle),
-          InfoItem(titleText: "Género", text: "Male", titlesStyle: titlesStyle),
-          InfoItem(titleText: "Mundo Natal", text: "Tatooine", titlesStyle: titlesStyle),
-          InfoItem(titleText: "Altura", text: "1.85", titlesStyle: titlesStyle),
-          InfoItem(titleText: "Peso", text: "90", titlesStyle: titlesStyle),
-          InfoItem(titleText: "Color de Pelo", text: "Magenta", titlesStyle: titlesStyle),
-          InfoItem(titleText: "Color de Ojos", text: "Azul", titlesStyle: titlesStyle),
-          CarouselCards(
-              titleText: "Vehículos",
-              texts: ["wooki", "asdsadd", "sadaas", "asdsdasdasd"],
-              iconData: FontAwesomeIcons.truckMoving,
-              titlesStyle: titlesStyle),
-          CarouselCards(
-              titleText: "Naves", texts: ["wooki", "asdsadd", "sadaas", "asdsdasdasd"], iconData: FontAwesomeIcons.rocket, titlesStyle: titlesStyle),
-          const SizedBox(
-            height: 20,
-          ),
-          const _ReportButton(),
-          const SizedBox(
-            height: 20,
-          ),
-        ],
+      child: BlocBuilder<HomeDetailBloc, HomeDetailState>(
+        builder: (context, state) => ListView(
+          shrinkWrap: true,
+          physics: const BouncingScrollPhysics(),
+          children: [
+            InfoItem(titleText: "Nacimiento:", text: character.birth_year, titlesStyle: titlesStyle),
+            InfoItem(titleText: "Género:", text: character.gender, titlesStyle: titlesStyle),
+            InfoItem(
+              titleText: "Mundo Natal:",
+              text: state.homeworld == null ? character.homeworld : state.homeworld!.name,
+              titlesStyle: titlesStyle,
+              isLoading: state.homeworld == null,
+            ),
+            InfoItem(titleText: "Altura:", text: character.height, titlesStyle: titlesStyle),
+            InfoItem(titleText: "Peso:", text: character.mass, titlesStyle: titlesStyle),
+            InfoItem(titleText: "Color de Pelo:", text: character.hair_color, titlesStyle: titlesStyle),
+            InfoItem(titleText: "Color de Ojos:", text: character.eye_color, titlesStyle: titlesStyle),
+            if (character.vehicles.isNotEmpty) ...[
+              CarouselCards(
+                titleText: "Vehículos",
+                texts: state.vehicles == null ? character.vehicles : state.vehicles!.map((v) => v.name).toList(),
+                iconData: FontAwesomeIcons.truckMoving,
+                titlesStyle: titlesStyle,
+                isLoading: state.vehicles == null,
+              )
+            ],
+            if (character.starships.isNotEmpty) ...[
+              CarouselCards(
+                  titleText: "Naves",
+                  texts: state.starships == null ? character.starships : state.starships!.map((s) => s.name).toList(),
+                  iconData: FontAwesomeIcons.rocket,
+                  titlesStyle: titlesStyle,
+                  isLoading: state.starships == null)
+            ],
+            const SizedBox(
+              height: 20,
+            ),
+            const _ReportButton(),
+            const SizedBox(
+              height: 20,
+            ),
+          ],
+        ),
       ),
     );
   }

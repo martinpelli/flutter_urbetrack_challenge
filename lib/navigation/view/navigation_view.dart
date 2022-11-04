@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_urbetrack_challenge/home_detail/bloc/home_detail_bloc.dart';
 import 'package:flutter_urbetrack_challenge/home_detail/view/home_detail_view.dart';
 import 'package:flutter_urbetrack_challenge/home_list/view/home_list_view.dart';
 import 'package:flutter_urbetrack_challenge/main/bloc/main_bloc.dart';
@@ -17,7 +18,8 @@ class NavigationView extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => NavigationBloc()),
         BlocProvider(create: (_) => MainBloc()),
-        BlocProvider(create: (_) => HomeListBloc())
+        BlocProvider(create: (_) => HomeListBloc()),
+        BlocProvider(create: (_) => HomeDetailBloc()),
       ],
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -27,9 +29,9 @@ class NavigationView extends StatelessWidget {
             case 1:
               return const MainView();
             default:
-              if (state.characterDetails != null) {
+              if (state.character != null) {
                 return HomeDetailView(
-                  character: state.characterDetails!,
+                  character: state.character!,
                 );
               } else {
                 return const HomeListView();
@@ -50,13 +52,14 @@ class _TopBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationBloc, NavigationState>(
-      buildWhen: (previous, current) =>
-          (previous.characterDetails != current.characterDetails) || (previous.currentNavIndex != current.currentNavIndex),
+      buildWhen: (previous, current) => (previous.character != current.character) || (previous.currentNavIndex != current.currentNavIndex),
       builder: (context, state) => AppBar(
-        leading: (state.characterDetails != null && state.currentNavIndex == 0)
+        leading: (state.character != null && state.currentNavIndex == 0)
             ? IconButton(
                 onPressed: () {
                   BlocProvider.of<NavigationBloc>(context).add(PopHomeDetailEvent());
+                  BlocProvider.of<HomeListBloc>(context).add(RestorePageEvent());
+                  BlocProvider.of<HomeDetailBloc>(context).add(ResetDetailsEvent());
                 },
                 icon: const Icon(Icons.arrow_back))
             : null,

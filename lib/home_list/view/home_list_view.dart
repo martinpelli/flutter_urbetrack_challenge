@@ -68,8 +68,6 @@ class _Body extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final PageController controller = PageController(initialPage: 0);
-
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -86,8 +84,8 @@ class _Body extends StatelessWidget {
         child: Column(
           children: [
             const _Title(),
-            _ListNavigation(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage, controller: controller),
-            _CharacterList(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage, controller: controller),
+            _ListNavigation(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage),
+            _CharacterList(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage),
           ],
         ));
   }
@@ -109,14 +107,13 @@ class _Title extends StatelessWidget {
 }
 
 class _ListNavigation extends StatelessWidget {
-  final PageController controller;
   final int amountOfCardsToShowPerPage;
 
-  const _ListNavigation({Key? key, required this.controller, required this.amountOfCardsToShowPerPage}) : super(key: key);
+  const _ListNavigation({Key? key, required this.amountOfCardsToShowPerPage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final HomeListBloc homeBloc = BlocProvider.of<HomeListBloc>(context);
+    final HomeListBloc homeListBloc = BlocProvider.of<HomeListBloc>(context);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 25.0),
@@ -140,7 +137,7 @@ class _ListNavigation extends StatelessWidget {
                                 state.isChangingPage ||
                                 (state.currentPage == 1 && state.people!.results.length != state.people!.count))
                             ? null
-                            : () => homeBloc.add(PreviousPageEvent(amountOfPages: totalAmountOfPages, controller: controller)),
+                            : () => homeListBloc.add(PreviousPageEvent(amountOfPages: totalAmountOfPages)),
                         iconSize: 12,
                         icon: const Icon(Icons.arrow_back_ios_new)),
                   ),
@@ -152,7 +149,7 @@ class _ListNavigation extends StatelessWidget {
                         constraints: const BoxConstraints(maxWidth: 40, maxHeight: 40, minHeight: 35, minWidth: 35),
                         onPressed: (totalAmountOfPages <= 1 || state.isChangingPage)
                             ? null
-                            : () => homeBloc.add(NextPageEvent(amountOfPages: totalAmountOfPages, controller: controller)),
+                            : () => homeListBloc.add(NextPageEvent(amountOfPages: totalAmountOfPages)),
                         iconSize: 12,
                         alignment: Alignment.center,
                         icon: const Icon(
@@ -169,16 +166,16 @@ class _ListNavigation extends StatelessWidget {
 
 class _CharacterList extends StatelessWidget {
   final int amountOfCardsToShowPerPage;
-  final PageController controller;
 
   const _CharacterList({
     Key? key,
     required this.amountOfCardsToShowPerPage,
-    required this.controller,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final HomeListBloc homeListBloc = BlocProvider.of<HomeListBloc>(context);
+
     return BlocBuilder<HomeListBloc, HomeListState>(
         buildWhen: (previous, current) =>
             (current.people != null &&
@@ -193,7 +190,7 @@ class _CharacterList extends StatelessWidget {
               behavior: ScrollWithoutGlowBehavior(),
               child: PageView.builder(
                   physics: const NeverScrollableScrollPhysics(),
-                  controller: controller,
+                  controller: homeListBloc.controller,
                   itemCount: totalAmountOfPages,
                   itemBuilder: (_, pageIndex) => ListView.separated(
                       physics: const NeverScrollableScrollPhysics(),
@@ -206,7 +203,7 @@ class _CharacterList extends StatelessWidget {
                           return Container();
                         }
 
-                        return CharacterCard(name: characters[arrayIndex].name, gender: characters[arrayIndex].gender);
+                        return CharacterCard(character: characters[arrayIndex]);
                       }),
                       separatorBuilder: (_, __) => const SizedBox(height: 8.0))),
             ),

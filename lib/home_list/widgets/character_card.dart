@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_urbetrack_challenge/home_list/bloc/home_list_bloc.dart';
+import 'package:flutter_urbetrack_challenge/models/character/character_model.dart';
 import 'package:flutter_urbetrack_challenge/navigation/bloc/navigation_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CharacterCard extends StatelessWidget {
-  final String name;
-  final String gender;
+  final Character character;
 
-  const CharacterCard({Key? key, required this.name, required this.gender}) : super(key: key);
+  const CharacterCard({Key? key, required this.character}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,10 @@ class CharacterCard extends StatelessWidget {
       child: Material(
         type: MaterialType.transparency,
         child: ListTile(
-          onTap: () => BlocProvider.of<NavigationBloc>(context).add(GoToHomeDetailEvent(character: name)),
+          onTap: () {
+            BlocProvider.of<NavigationBloc>(context).add(GoToHomeDetailEvent(character: character));
+            BlocProvider.of<HomeListBloc>(context).add(RemoveControllerEvent());
+          },
           leading: const Padding(
               padding: EdgeInsets.only(left: 10.0),
               child: FaIcon(
@@ -24,10 +28,10 @@ class CharacterCard extends StatelessWidget {
                 size: 30,
               )),
           title: Text(
-            name,
+            character.name,
             style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
           ),
-          subtitle: Text(gender),
+          subtitle: Text(character.gender),
           trailing: const Padding(
             padding: EdgeInsets.only(right: 10.0),
             child: Icon(Icons.arrow_right_sharp, size: 20),
