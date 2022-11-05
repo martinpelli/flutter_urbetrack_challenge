@@ -20,3 +20,7 @@ class HomeListState {
 class HomeListInitialState extends HomeListState {
   HomeListInitialState() : super(currentPage: 1, isSearching: false, people: null, isLoading: false, isChangingPage: false);
 }
+
+class HomeListSearchingState extends HomeListState {
+  HomeListSearchingState() : super(currentPage: 1, isSearching: false, people: null, isLoading: true, isChangingPage: false);
+}

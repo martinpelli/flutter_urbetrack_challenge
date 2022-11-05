@@ -12,7 +12,8 @@ class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
   int _lastPeoplePage = 0;
   bool restorePage = false;
 
-  PageController controller = PageController(initialPage: 0);
+  PageController pageController = PageController(initialPage: 0);
+  final TextEditingController searchController = TextEditingController();
 
   HomeListBloc() : super(HomeListInitialState()) {
     on<NextPageEvent>((event, emit) async {
@@ -20,10 +21,10 @@ class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
       final int newPage;
       if ((state.currentPage + 1) > event.amountOfPages) {
         newPage = 1;
-        await controller.animateToPage(0, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+        await pageController.animateToPage(0, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
       } else {
         newPage = state.currentPage + 1;
-        await controller.nextPage(duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+        await pageController.nextPage(duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
       }
       emit(state.copyWith(currentPage: newPage, isChangingPage: false));
     });
@@ -33,21 +34,26 @@ class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
       final int newPage;
       if ((state.currentPage - 1) <= 0) {
         newPage = event.amountOfPages;
-        await controller.animateToPage(event.amountOfPages - 1, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+        await pageController.animateToPage(event.amountOfPages - 1, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
       } else {
         newPage = state.currentPage - 1;
-        await controller.previousPage(duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
+        await pageController.previousPage(duration: const Duration(milliseconds: 200), curve: Curves.easeInOut);
       }
       emit(state.copyWith(currentPage: newPage, isChangingPage: false));
     });
 
-    on<SearchCharacterEvent>((event, emit) {
-      if (event.text.isEmpty) {
+    on<SearchCharacterEvent>((event, emit) async {
+      emit(HomeListSearchingState());
+      if (searchController.text.isEmpty) {
         emit(state.copyWith(isSearching: false));
+        _peoplePage = 0;
+        add(GetPeopleEvent());
         return;
       }
-      print("searching");
-      emit(state.copyWith(isSearching: true));
+      final People filteredPeople = await ApiClient.getSearchedPeople(searchController.text);
+      _peoplePage = 1;
+      _lastPeoplePage = filteredPeople.count == 0 ? 0 : (filteredPeople.count / filteredPeople.results.length).ceil();
+      emit(state.copyWith(people: filteredPeople, isSearching: true, isLoading: false));
     });
 
     on<GetPeopleEvent>((event, emit) async {
@@ -69,11 +75,11 @@ class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
     });
 
     on<RemoveControllerEvent>(((event, emit) {
-      if (controller.hasClients) controller.dispose();
+      if (pageController.hasClients) pageController.dispose();
     }));
 
     on<RestorePageEvent>((event, emit) async {
-      controller = PageController(initialPage: state.currentPage - 1);
+      pageController = PageController(initialPage: state.currentPage - 1);
     });
 
     add(GetPeopleEvent());

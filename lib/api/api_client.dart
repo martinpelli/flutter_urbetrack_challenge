@@ -6,11 +6,11 @@ import 'package:flutter_urbetrack_challenge/models/vehicle/vehicle_model.dart';
 
 class ApiClient {
   static final Dio _dio = Dio();
+  static const String _baseSwapiUrl = "https://swapi.dev/api";
 
   static Future<People> getPeople(String param) async {
-    const String baseUrl = "https://swapi.dev/api";
     final String path = '/people/?page=$param';
-    var response = await _dio.get(baseUrl + path);
+    var response = await _dio.get(_baseSwapiUrl + path);
     final People people = People.fromJson(response.data);
     return people;
   }
@@ -36,5 +36,12 @@ class ApiClient {
   static Future<Response> reportSighting(Map<String, dynamic> data) async {
     const String baseUrl = "https://jsonplaceholder.typicode.com/posts";
     return await _dio.post(baseUrl, data: data);
+  }
+
+  static Future<People> getSearchedPeople(String param) async {
+    final String path = '/people/?search=$param';
+    var response = await _dio.get(_baseSwapiUrl + path);
+    final People people = People.fromJson(response.data);
+    return people;
   }
 }

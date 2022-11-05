@@ -14,11 +14,7 @@ class PreviousPageEvent extends HomeListEvent {
   PreviousPageEvent({required this.amountOfPages});
 }
 
-class SearchCharacterEvent extends HomeListEvent {
-  final String text;
-
-  SearchCharacterEvent({required this.text});
-}
+class SearchCharacterEvent extends HomeListEvent {}
 
 class GetPeopleEvent extends HomeListEvent {}
 

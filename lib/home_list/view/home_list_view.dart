@@ -24,25 +24,25 @@ class HomeListView extends StatelessWidget {
 }
 
 class _SearchField extends StatelessWidget {
-  _SearchField({
+  const _SearchField({
     Key? key,
   }) : super(key: key);
 
-  final TextEditingController controller = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
+    final TextEditingController searchController = BlocProvider.of<HomeListBloc>(context).searchController;
     return BlocBuilder<HomeListBloc, HomeListState>(
       buildWhen: (previous, current) => current.isSearching != previous.isSearching,
       builder: (context, state) => Container(
         height: 60.0,
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         child: TextField(
+          controller: searchController,
           cursorColor: Colors.black,
           style: const TextStyle(color: Colors.black),
           keyboardType: TextInputType.name,
           autofocus: false,
-          onSubmitted: (value) => BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent(text: controller.text)),
+          onSubmitted: (_) => BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent()),
           decoration: InputDecoration(
               prefixIcon: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
@@ -51,8 +51,8 @@ class _SearchField extends StatelessWidget {
               suffixIcon: state.isSearching
                   ? IconButton(
                       onPressed: () {
-                        controller.clear();
-                        BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent(text: controller.text));
+                        searchController.clear();
+                        BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent());
                       },
                       icon: Icon(Icons.clear, color: const Color(0xff273037).withOpacity(0.7)))
                   : null,
@@ -121,10 +121,15 @@ class _ListNavigation extends StatelessWidget {
         height: 35,
         child: BlocBuilder<HomeListBloc, HomeListState>(
             buildWhen: (previous, current) =>
-                previous.currentPage != current.currentPage || (previous.isChangingPage != current.isChangingPage) || previous.people == null,
+                previous.currentPage != current.currentPage ||
+                (previous.isChangingPage != current.isChangingPage) ||
+                previous.people == null ||
+                current.people == null,
             builder: (context, state) {
-              final int totalAmountOfPages = state.people != null ? (state.people!.count / amountOfCardsToShowPerPage).ceil() : 1;
-              final int currentAmountOfPages = state.people != null ? (state.people!.results.length / amountOfCardsToShowPerPage).ceil() : 1;
+              final int totalAmountOfPages =
+                  state.people != null && state.people!.count > 0 ? (state.people!.count / amountOfCardsToShowPerPage).ceil() : 1;
+              final int currentAmountOfPages =
+                  state.people != null && state.people!.count > 0 ? (state.people!.results.length / amountOfCardsToShowPerPage).ceil() : 1;
               if (state.currentPage >= currentAmountOfPages && state.people != null) BlocProvider.of<HomeListBloc>(context).add(GetPeopleEvent());
 
               return Row(
@@ -190,7 +195,7 @@ class _CharacterList extends StatelessWidget {
               behavior: ScrollWithoutGlowBehavior(),
               child: PageView.builder(
                   physics: const NeverScrollableScrollPhysics(),
-                  controller: homeListBloc.controller,
+                  controller: homeListBloc.pageController,
                   itemCount: totalAmountOfPages,
                   itemBuilder: (_, pageIndex) => ListView.separated(
                       physics: const NeverScrollableScrollPhysics(),
