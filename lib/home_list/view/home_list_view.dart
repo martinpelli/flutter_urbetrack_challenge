@@ -46,7 +46,7 @@ class _SearchField extends StatelessWidget {
           decoration: InputDecoration(
               prefixIcon: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
-                child: Icon(Icons.search, size: 30, color: const Color(0xff273037).withOpacity(0.7)),
+                child: Icon(Icons.search, size: 25, color: const Color(0xff273037).withOpacity(0.7)),
               ),
               suffixIcon: state.isSearching
                   ? IconButton(
@@ -73,7 +73,7 @@ class _Body extends StatelessWidget {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double characterListHeight = MediaQuery.of(context).size.height - 325.0;
 
-    final int amountOfCardsToShowPerPage = (characterListHeight / 100.0).floor();
+    final int amountOfCardsToShowPerPage = (characterListHeight / 90.0).floor();
 
     return Container(
         decoration: const BoxDecoration(
@@ -205,7 +205,7 @@ class _CharacterList extends StatelessWidget {
 
                         return CharacterCard(index: arrayIndex, character: characters[arrayIndex]);
                       }),
-                      separatorBuilder: (_, __) => const SizedBox(height: 8.0))),
+                      separatorBuilder: (_, __) => const SizedBox(height: 10.0))),
             ),
           );
         });

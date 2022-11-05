@@ -12,7 +12,7 @@ class CharacterCardLoading extends StatelessWidget {
         right: 18.0,
       ),
       child: SkeletonLine(
-        style: SkeletonLineStyle(width: double.infinity, height: 85, borderRadius: BorderRadius.circular(20)),
+        style: SkeletonLineStyle(width: double.infinity, height: 70, borderRadius: BorderRadius.circular(20)),
       ),
     );
   }

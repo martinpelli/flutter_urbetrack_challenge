@@ -55,14 +55,16 @@ class _TopBar extends StatelessWidget with PreferredSizeWidget {
     return BlocBuilder<NavigationBloc, NavigationState>(
       buildWhen: (previous, current) => (previous.character != current.character) || (previous.currentNavIndex != current.currentNavIndex),
       builder: (context, state) => AppBar(
+        leadingWidth: 35,
         leading: (state.character != null && state.currentNavIndex == 0)
             ? IconButton(
+                padding: const EdgeInsets.only(left: 15.0),
                 onPressed: () {
                   BlocProvider.of<NavigationBloc>(context).add(PopHomeDetailEvent());
                   BlocProvider.of<HomeListBloc>(context).add(RestorePageEvent());
                   BlocProvider.of<HomeDetailBloc>(context).add(ResetDetailsEvent());
                 },
-                icon: const Icon(Icons.arrow_back))
+                icon: const Icon(Icons.arrow_back_ios))
             : null,
         title: const Text(
           'Star Wars',

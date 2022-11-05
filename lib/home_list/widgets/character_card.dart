@@ -18,6 +18,7 @@ class CharacterCard extends StatelessWidget {
       child: Material(
         type: MaterialType.transparency,
         child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 5.0),
           onTap: () {
             BlocProvider.of<NavigationBloc>(context).add(GoToHomeDetailEvent(characterId: index, character: character));
             BlocProvider.of<HomeListBloc>(context).add(RemoveControllerEvent());
@@ -35,7 +36,7 @@ class CharacterCard extends StatelessWidget {
           subtitle: Text(character.gender),
           trailing: const Padding(
             padding: EdgeInsets.only(right: 10.0),
-            child: Icon(Icons.arrow_right_sharp, size: 20),
+            child: Icon(Icons.arrow_forward_ios, size: 20),
           ),
         ),
       ),
