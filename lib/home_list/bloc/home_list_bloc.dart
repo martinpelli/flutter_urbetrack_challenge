@@ -11,6 +11,7 @@ class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
   int _peoplePage = 0;
   int _lastPeoplePage = 0;
   bool restorePage = false;
+  double? previousHeight;
 
   PageController pageController = PageController(initialPage: 0);
   final TextEditingController searchController = TextEditingController();

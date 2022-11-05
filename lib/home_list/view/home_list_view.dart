@@ -4,6 +4,8 @@ import 'package:flutter_urbetrack_challenge/home_list/bloc/home_list_bloc.dart';
 import 'package:flutter_urbetrack_challenge/home_list/widgets/character_card.dart';
 import 'package:flutter_urbetrack_challenge/home_list/widgets/character_card_loading.dart';
 import 'package:flutter_urbetrack_challenge/home_list/widgets/rounded_grey_container.dart';
+import 'package:flutter_urbetrack_challenge/widgets/custom_animated_container.dart';
+import 'package:flutter_urbetrack_challenge/widgets/custom_animated_opacity.dart';
 
 import '../../models/character/character_model.dart';
 
@@ -12,12 +14,13 @@ class HomeListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
+    return ListView(
+      physics: const NeverScrollableScrollPhysics(),
+      reverse: true,
       children: [
-        _SearchField(),
+        const _Body(),
         const SizedBox(height: 18.0),
-        _Body(),
+        const _SearchField(),
       ],
     );
   }
@@ -31,32 +34,34 @@ class _SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController searchController = BlocProvider.of<HomeListBloc>(context).searchController;
-    return BlocBuilder<HomeListBloc, HomeListState>(
-      buildWhen: (previous, current) => current.isSearching != previous.isSearching,
-      builder: (context, state) => Container(
-        height: 60.0,
-        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-        child: TextField(
-          controller: searchController,
-          cursorColor: Colors.black,
-          style: const TextStyle(color: Colors.black),
-          keyboardType: TextInputType.name,
-          autofocus: false,
-          onSubmitted: (_) => BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent()),
-          decoration: InputDecoration(
-              prefixIcon: Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Icon(Icons.search, size: 25, color: const Color(0xff273037).withOpacity(0.7)),
-              ),
-              suffixIcon: state.isSearching
-                  ? IconButton(
-                      onPressed: () {
-                        searchController.clear();
-                        BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent());
-                      },
-                      icon: Icon(Icons.clear, color: const Color(0xff273037).withOpacity(0.7)))
-                  : null,
-              labelText: "Buscar personaje..."),
+    return CustomAnimatedOpacity(
+      child: BlocBuilder<HomeListBloc, HomeListState>(
+        buildWhen: (previous, current) => current.isSearching != previous.isSearching,
+        builder: (context, state) => Container(
+          height: 60.0,
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: TextField(
+            controller: searchController,
+            cursorColor: Colors.black,
+            style: const TextStyle(color: Colors.black),
+            keyboardType: TextInputType.name,
+            autofocus: false,
+            onSubmitted: (_) => BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent()),
+            decoration: InputDecoration(
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Icon(Icons.search, size: 25, color: const Color(0xff273037).withOpacity(0.7)),
+                ),
+                suffixIcon: state.isSearching
+                    ? IconButton(
+                        onPressed: () {
+                          searchController.clear();
+                          BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent());
+                        },
+                        icon: Icon(Icons.clear, color: const Color(0xff273037).withOpacity(0.7)))
+                    : null,
+                labelText: "Buscar personaje..."),
+          ),
         ),
       ),
     );
@@ -64,23 +69,15 @@ class _SearchField extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-  _Body({
-    Key? key,
-  }) : super(key: key);
+  const _Body({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
     final double characterListHeight = MediaQuery.of(context).size.height - 325.0;
-
     final int amountOfCardsToShowPerPage = (characterListHeight / 90.0).floor();
 
-    return Container(
-        decoration: const BoxDecoration(
-          color: Color(0xff11181E),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
-        ),
-        height: screenHeight * 0.70,
+    return CustomAnimatedContainer(
+        defaultHeight: MediaQuery.of(context).size.height * 0.7,
         child: Column(
           children: [
             const _Title(),

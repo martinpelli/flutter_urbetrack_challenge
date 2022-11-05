@@ -6,6 +6,7 @@ import 'package:flutter_urbetrack_challenge/home_list/view/home_list_view.dart';
 import 'package:flutter_urbetrack_challenge/main/bloc/main_bloc.dart';
 import 'package:flutter_urbetrack_challenge/main/view/main_view.dart';
 import 'package:flutter_urbetrack_challenge/navigation/bloc/navigation_bloc.dart';
+import 'package:flutter_urbetrack_challenge/widgets/custom_animated_opacity.dart';
 
 import '../../home_list/bloc/home_list_bloc.dart';
 
@@ -64,7 +65,7 @@ class _TopBar extends StatelessWidget with PreferredSizeWidget {
                   BlocProvider.of<HomeListBloc>(context).add(RestorePageEvent());
                   BlocProvider.of<HomeDetailBloc>(context).add(ResetDetailsEvent());
                 },
-                icon: const Icon(Icons.arrow_back_ios))
+                icon: const CustomAnimatedOpacity(child: Icon(Icons.arrow_back_ios)))
             : null,
         title: const Text(
           'Star Wars',

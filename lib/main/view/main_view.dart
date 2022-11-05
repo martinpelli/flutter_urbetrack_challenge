@@ -71,8 +71,8 @@ class _Switch extends StatelessWidget {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
       child: Switch(
-          inactiveThumbColor: Colors.grey[400],
-          inactiveTrackColor: Colors.grey,
+          inactiveThumbColor: const Color(0xff78828B).withOpacity(0.7),
+          inactiveTrackColor: const Color(0xff78828B),
           value: isEnabled,
           onChanged: (value) => BlocProvider.of<MainBloc>(context).add(ChangeConnectionEvent(value: value))),
     );

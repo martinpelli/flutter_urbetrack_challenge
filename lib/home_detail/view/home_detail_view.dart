@@ -4,6 +4,7 @@ import 'package:flutter_urbetrack_challenge/home_detail/bloc/home_detail_bloc.da
 import 'package:flutter_urbetrack_challenge/home_detail/widgets/carousel_cards.dart';
 import 'package:flutter_urbetrack_challenge/main/bloc/main_bloc.dart';
 import 'package:flutter_urbetrack_challenge/models/character/character_model.dart';
+import 'package:flutter_urbetrack_challenge/widgets/custom_animated_container.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../widgets/info_item.dart';
@@ -25,22 +26,31 @@ class HomeDetailView extends StatelessWidget {
 
     return Align(
       alignment: Alignment.bottomCenter,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          color: Color(0xff11181E),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _TitleName(name: character.name),
-            _Details(characterId: characterId, character: character, titlesStyle: titlesStyle),
-          ],
+      child: CustomAnimatedContainer(
+        defaultHeight: calculateContainerHeight(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _TitleName(name: character.name),
+              _Details(characterId: characterId, character: character, titlesStyle: titlesStyle),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  double calculateContainerHeight() {
+    const double allPersistItemsHeight = 366;
+    double carouselsHeigth = 0;
+
+    if (character.vehicles.isNotEmpty) carouselsHeigth += 118;
+    if (character.starships.isNotEmpty) carouselsHeigth += 118;
+
+    return allPersistItemsHeight + carouselsHeigth;
+    //195
   }
 }
 
@@ -155,7 +165,7 @@ class _ReportButton extends StatelessWidget {
         height: 50,
         child: BlocBuilder<MainBloc, MainState>(
             builder: (context, state) => MaterialButton(
-                disabledColor: Colors.grey,
+                disabledColor: const Color(0xff78828B),
                 color: const Color(0xffE9B042),
                 onPressed: state.isEnabled && snackBarMessage != "Enviando reporte"
                     ? () => BlocProvider.of<HomeDetailBloc>(context).add(ReportSightingEvent(userId: characterId, name: name))
