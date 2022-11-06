@@ -4,7 +4,7 @@ import 'package:skeletons/skeletons.dart';
 
 class CarouselCards extends StatelessWidget {
   final String titleText;
-  final List<String> texts;
+  final List<dynamic> texts;
   final IconData iconData;
   final bool isLoading;
 

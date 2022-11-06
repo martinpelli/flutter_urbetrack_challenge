@@ -20,9 +20,9 @@ class HomeDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomeDetailBloc homeDetailBloc = BlocProvider.of<HomeDetailBloc>(context);
-    homeDetailBloc.add(GetHomeworldEvent(homeWorld: character.homeworld));
-    homeDetailBloc.add(GetVehiclesEvent(vehicles: character.vehicles));
-    homeDetailBloc.add(GetStarshipsEvent(starships: character.starships));
+    homeDetailBloc.add(GetHomeworldEvent(homeWorld: character.homeworld, name: character.name));
+    homeDetailBloc.add(GetVehiclesEvent(vehicles: character.vehicles, name: character.name));
+    homeDetailBloc.add(GetStarshipsEvent(starships: character.starships, name: character.name));
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -100,9 +100,9 @@ class _Details extends StatelessWidget {
             InfoItem(titleText: "Género:", text: character.gender, titlesStyle: titlesStyle),
             InfoItem(
               titleText: "Mundo Natal:",
-              text: state.homeworld == null ? character.homeworld : state.homeworld!.name,
+              text: state.homeworlds[character.name] == null ? character.homeworld : state.homeworlds[character.name]!.name,
               titlesStyle: titlesStyle,
-              isLoading: state.homeworld == null,
+              isLoading: state.homeworlds[character.name] == null,
             ),
             InfoItem(titleText: "Altura:", text: character.height, titlesStyle: titlesStyle),
             InfoItem(titleText: "Peso:", text: character.mass, titlesStyle: titlesStyle),
@@ -111,19 +111,19 @@ class _Details extends StatelessWidget {
             if (character.vehicles.isNotEmpty) ...[
               CarouselCards(
                 titleText: "Vehículos",
-                texts: state.vehicles == null ? character.vehicles : state.vehicles!.map((v) => v.name).toList(),
+                texts: state.vehicles[character.name] == null ? character.vehicles : state.vehicles[character.name]!.map((v) => v.name).toList(),
                 iconData: FontAwesomeIcons.truckMoving,
                 titlesStyle: titlesStyle,
-                isLoading: state.vehicles == null,
+                isLoading: state.vehicles[character.name] == null,
               )
             ],
             if (character.starships.isNotEmpty) ...[
               CarouselCards(
                   titleText: "Naves",
-                  texts: state.starships == null ? character.starships : state.starships!.map((s) => s.name).toList(),
+                  texts: state.starships[character.name] == null ? character.starships : state.starships[character.name]!.map((s) => s.name).toList(),
                   iconData: FontAwesomeIcons.rocket,
                   titlesStyle: titlesStyle,
-                  isLoading: state.starships == null)
+                  isLoading: state.starships[character.name] == null)
             ],
             const SizedBox(
               height: 20,

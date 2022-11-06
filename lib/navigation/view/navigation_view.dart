@@ -63,7 +63,6 @@ class _TopBar extends StatelessWidget with PreferredSizeWidget {
                 onPressed: () {
                   BlocProvider.of<NavigationBloc>(context).add(PopHomeDetailEvent());
                   BlocProvider.of<HomeListBloc>(context).add(RestorePageEvent());
-                  BlocProvider.of<HomeDetailBloc>(context).add(ResetDetailsEvent());
                 },
                 icon: const CustomAnimatedOpacity(child: Icon(Icons.arrow_back_ios)))
             : null,

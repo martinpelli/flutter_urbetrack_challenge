@@ -11,15 +11,17 @@ part 'home_detail_state.dart';
 class HomeDetailBloc extends HydratedBloc<HomeDetailEvent, HomeDetailState> {
   HomeDetailBloc() : super(HomeDetailInitialState()) {
     on<GetHomeworldEvent>((event, emit) async {
-      if (state.homeworld != null) return;
+      if (state.homeworlds.isNotEmpty && state.homeworlds[event.name] != null) return;
 
       Homeworld homeworld = await ApiClient.getHomeWorld(event.homeWorld);
 
-      emit(state.copyWith(homeworld: homeworld));
+      state.homeworlds[event.name] = homeworld;
+
+      emit(state.copyWith(homeworlds: state.homeworlds));
     });
 
     on<GetVehiclesEvent>((event, emit) async {
-      if (state.vehicles != null) return;
+      if (state.vehicles.isNotEmpty && state.vehicles[event.name] != null) return;
 
       final List<Vehicle> vehicles = [];
 
@@ -28,11 +30,13 @@ class HomeDetailBloc extends HydratedBloc<HomeDetailEvent, HomeDetailState> {
         vehicles.add(vehicle);
       }
 
-      emit(state.copyWith(vehicles: vehicles));
+      state.vehicles[event.name] = vehicles;
+
+      emit(state.copyWith(vehicles: state.vehicles));
     });
 
     on<GetStarshipsEvent>((event, emit) async {
-      if (state.starships != null) return;
+      if (state.starships.isNotEmpty && state.starships[event.name] != null) return;
 
       final List<Starship> starships = [];
 
@@ -41,10 +45,10 @@ class HomeDetailBloc extends HydratedBloc<HomeDetailEvent, HomeDetailState> {
         starships.add(starship);
       }
 
-      emit(state.copyWith(starships: starships));
-    });
+      state.starships[event.name] = starships;
 
-    on<ResetDetailsEvent>((event, emit) => emit(HomeDetailInitialState()));
+      emit(state.copyWith(starships: state.starships));
+    });
 
     on<ReportSightingEvent>((event, emit) async {
       emit(state.copyWith(snackBarMessage: 'Enviando reporte'));
