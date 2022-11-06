@@ -5,10 +5,8 @@ import 'package:path_provider/path_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final storage = await HydratedStorage.build(
-    storageDirectory: await getApplicationDocumentsDirectory(),
-  );
-  HydratedBlocOverrides.runZoned(() => runApp(const UrbetrackChallenge()), storage: storage);
+  HydratedBloc.storage = await HydratedStorage.build(storageDirectory: await getApplicationDocumentsDirectory());
+  runApp(const UrbetrackChallenge());
 }
 
 class UrbetrackChallenge extends StatelessWidget {

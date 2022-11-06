@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import '../../api/api_client.dart';
 import '../../models/people/people_model.dart';
@@ -7,8 +7,7 @@ import '../../models/people/people_model.dart';
 part 'home_list_event.dart';
 part 'home_list_state.dart';
 
-class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
-  int _peoplePage = 0;
+class HomeListBloc extends HydratedBloc<HomeListEvent, HomeListState> {
   int _lastPeoplePage = 0;
   bool restorePage = false;
   double? previousHeight;
@@ -44,29 +43,27 @@ class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
     });
 
     on<SearchCharacterEvent>((event, emit) async {
-      emit(HomeListSearchingState());
+      emit(HomeListSearchingState(text: searchController.text));
       if (searchController.text.isEmpty) {
-        emit(state.copyWith(isSearching: false));
-        _peoplePage = 0;
+        emit(state.copyWith(isSearching: false, currentPeoplePage: 0));
         add(GetPeopleEvent());
         return;
       }
       final People filteredPeople = await ApiClient.getSearchedPeople(searchController.text);
-      _peoplePage = 1;
       _lastPeoplePage = filteredPeople.count == 0 ? 0 : (filteredPeople.count / filteredPeople.results.length).ceil();
-      emit(state.copyWith(people: filteredPeople, isSearching: true, isLoading: false));
+      emit(state.copyWith(people: filteredPeople, isSearching: true, isLoading: false, currentPeoplePage: 1));
     });
 
     on<GetPeopleEvent>((event, emit) async {
-      if (state.people != null && (state.people!.results.length == state.people!.count || _peoplePage >= _lastPeoplePage)) return;
+      if (state.people != null && (state.people!.results.length == state.people!.count || state.currentPeoplePage >= _lastPeoplePage)) return;
 
-      emit(state.copyWith(isLoading: true));
+      emit(state.copyWith(isLoading: true, currentPeoplePage: state.currentPeoplePage + 1));
 
-      _peoplePage += 1;
+      print(state.currentPeoplePage);
 
-      final People people = await ApiClient.getPeople('$_peoplePage');
+      final People people = await ApiClient.getPeople('${state.currentPeoplePage}');
 
-      if (_peoplePage > 1) {
+      if (state.currentPeoplePage > 1) {
         People newPeople = state.people!.copyWith(results: [...state.people!.results, ...people.results]);
         emit(state.copyWith(people: newPeople, isLoading: false));
       } else {
@@ -85,4 +82,15 @@ class HomeListBloc extends Bloc<HomeListEvent, HomeListState> {
 
     add(GetPeopleEvent());
   }
+
+  @override
+  HomeListState? fromJson(Map<String, dynamic> json) {
+    final HomeListState localState = HomeListState.fromJson(json);
+    if (localState.people != null) _lastPeoplePage = (localState.people!.count / localState.people!.results.length).ceil();
+    if (localState.searchText.isNotEmpty) searchController.text = localState.searchText;
+    return localState;
+  }
+
+  @override
+  Map<String, dynamic>? toJson(HomeListState state) => state.toJson();
 }
