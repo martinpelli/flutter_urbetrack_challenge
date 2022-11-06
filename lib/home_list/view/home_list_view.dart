@@ -127,7 +127,9 @@ class _ListNavigation extends StatelessWidget {
                   state.people != null && state.people!.count > 0 ? (state.people!.count / amountOfCardsToShowPerPage).ceil() : 1;
               final int currentAmountOfPages =
                   state.people != null && state.people!.count > 0 ? (state.people!.results.length / amountOfCardsToShowPerPage).ceil() : 1;
-              if (state.currentPage >= currentAmountOfPages && state.people != null) BlocProvider.of<HomeListBloc>(context).add(GetPeopleEvent());
+
+              if (state.currentPage >= currentAmountOfPages && !state.isChangingPage && state.people != null)
+                BlocProvider.of<HomeListBloc>(context).add(GetPeopleEvent());
 
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

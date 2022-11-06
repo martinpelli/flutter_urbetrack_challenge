@@ -8,11 +8,10 @@ part 'home_list_event.dart';
 part 'home_list_state.dart';
 
 class HomeListBloc extends HydratedBloc<HomeListEvent, HomeListState> {
-  int _lastPeoplePage = 0;
   bool restorePage = false;
   double? previousHeight;
 
-  PageController pageController = PageController(initialPage: 0);
+  late PageController pageController;
   final TextEditingController searchController = TextEditingController();
 
   HomeListBloc() : super(HomeListInitialState()) {
@@ -50,25 +49,28 @@ class HomeListBloc extends HydratedBloc<HomeListEvent, HomeListState> {
         return;
       }
       final People filteredPeople = await ApiClient.getSearchedPeople(searchController.text);
-      _lastPeoplePage = filteredPeople.count == 0 ? 0 : (filteredPeople.count / filteredPeople.results.length).ceil();
-      emit(state.copyWith(people: filteredPeople, isSearching: true, isLoading: false, currentPeoplePage: 1));
+      final int lastPeoplePage = filteredPeople.count == 0 ? 0 : (filteredPeople.count / filteredPeople.results.length).ceil();
+      emit(state.copyWith(people: filteredPeople, isSearching: true, isLoading: false, currentPeoplePage: 1, lastPeoplePage: lastPeoplePage));
     });
 
     on<GetPeopleEvent>((event, emit) async {
-      if (state.people != null && (state.people!.results.length == state.people!.count || state.currentPeoplePage >= _lastPeoplePage)) return;
+      if (state.people != null && (state.people!.results.length == state.people!.count || state.currentPeoplePage >= state.lastPeoplePage)) return;
 
       emit(state.copyWith(isLoading: true, currentPeoplePage: state.currentPeoplePage + 1));
 
-      print(state.currentPeoplePage);
-
-      final People people = await ApiClient.getPeople('${state.currentPeoplePage}');
+      final People people;
+      if (state.isSearching) {
+        people = await ApiClient.getPeople('${state.currentPeoplePage}&search=${searchController.text}');
+      } else {
+        people = await ApiClient.getPeople('${state.currentPeoplePage}');
+      }
 
       if (state.currentPeoplePage > 1) {
         People newPeople = state.people!.copyWith(results: [...state.people!.results, ...people.results]);
         emit(state.copyWith(people: newPeople, isLoading: false));
       } else {
-        _lastPeoplePage = (people.count / people.results.length).ceil();
-        emit(state.copyWith(people: people, isLoading: false));
+        final int lastPeoplePage = (people.count / people.results.length).ceil();
+        emit(state.copyWith(people: people, isLoading: false, lastPeoplePage: lastPeoplePage));
       }
     });
 
@@ -80,13 +82,17 @@ class HomeListBloc extends HydratedBloc<HomeListEvent, HomeListState> {
       pageController = PageController(initialPage: state.currentPage - 1);
     });
 
-    add(GetPeopleEvent());
+    if (state.people == null) {
+      add(GetPeopleEvent());
+      pageController = PageController(initialPage: 0);
+    } else {
+      pageController = PageController(initialPage: state.currentPage - 1);
+    }
   }
 
   @override
   HomeListState? fromJson(Map<String, dynamic> json) {
     final HomeListState localState = HomeListState.fromJson(json);
-    if (localState.people != null) _lastPeoplePage = (localState.people!.count / localState.people!.results.length).ceil();
     if (localState.searchText.isNotEmpty) searchController.text = localState.searchText;
     return localState;
   }

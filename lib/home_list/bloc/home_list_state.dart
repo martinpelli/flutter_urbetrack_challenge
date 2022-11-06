@@ -7,6 +7,7 @@ class HomeListState {
   final bool isLoading;
   final bool isChangingPage;
   final int currentPeoplePage;
+  final int lastPeoplePage;
   final String searchText;
 
   HomeListState(
@@ -16,10 +17,18 @@ class HomeListState {
       required this.isLoading,
       required this.isChangingPage,
       required this.currentPeoplePage,
+      required this.lastPeoplePage,
       required this.searchText});
 
   HomeListState copyWith(
-          {int? currentPage, bool? isSearching, People? people, bool? isLoading, bool? isChangingPage, int? currentPeoplePage, String? searchText}) =>
+          {int? currentPage,
+          bool? isSearching,
+          People? people,
+          bool? isLoading,
+          bool? isChangingPage,
+          int? currentPeoplePage,
+          int? lastPeoplePage,
+          String? searchText}) =>
       HomeListState(
           currentPage: currentPage ?? this.currentPage,
           isSearching: isSearching ?? this.isSearching,
@@ -27,6 +36,7 @@ class HomeListState {
           isLoading: isLoading ?? this.isLoading,
           isChangingPage: isChangingPage ?? this.isChangingPage,
           currentPeoplePage: currentPeoplePage ?? this.currentPeoplePage,
+          lastPeoplePage: lastPeoplePage ?? this.lastPeoplePage,
           searchText: searchText ?? this.searchText);
 
   factory HomeListState.fromJson(Map<String, dynamic> json) => HomeListState(
@@ -36,6 +46,7 @@ class HomeListState {
       isLoading: json['isLoading'] ?? false,
       isChangingPage: json['isChangingPage'] ?? false,
       currentPeoplePage: json['currentPeoplePage'] ?? 0,
+      lastPeoplePage: json['lastPeoplePage'] ?? 0,
       searchText: json['searchText'] ?? '');
 
   Map<String, dynamic> toJson() => {
@@ -45,17 +56,34 @@ class HomeListState {
         "isLoading": isLoading,
         "isChangingPage": isChangingPage,
         "currentPeoplePage": currentPeoplePage,
+        "lastPeoplePage": lastPeoplePage,
         "searchText": searchText
       };
 }
 
 class HomeListInitialState extends HomeListState {
   HomeListInitialState()
-      : super(currentPage: 1, isSearching: false, people: null, isLoading: false, isChangingPage: false, currentPeoplePage: 0, searchText: '');
+      : super(
+            currentPage: 1,
+            isSearching: false,
+            people: null,
+            isLoading: false,
+            isChangingPage: false,
+            currentPeoplePage: 0,
+            lastPeoplePage: 0,
+            searchText: '');
 }
 
 class HomeListSearchingState extends HomeListState {
   final String text;
   HomeListSearchingState({required this.text})
-      : super(currentPage: 1, isSearching: false, people: null, isLoading: true, isChangingPage: false, currentPeoplePage: 0, searchText: text);
+      : super(
+            currentPage: 1,
+            isSearching: false,
+            people: null,
+            isLoading: true,
+            isChangingPage: false,
+            currentPeoplePage: 0,
+            lastPeoplePage: 0,
+            searchText: text);
 }
