@@ -17,10 +17,13 @@ class HomeListView extends StatelessWidget {
     return ListView(
       physics: const NeverScrollableScrollPhysics(),
       reverse: true,
-      children: [
-        const _Body(),
-        const SizedBox(height: 18.0),
-        const _SearchField(),
+      children: const [
+        _Body(),
+        SizedBox(height: 18.0),
+        _SearchField(),
+        SizedBox(
+          height: 18.0,
+        )
       ],
     );
   }
@@ -73,17 +76,20 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double characterListHeight = MediaQuery.of(context).size.height - 325.0;
-    final int amountOfCardsToShowPerPage = (characterListHeight / 90.0).floor();
+    final double characterListHeight = MediaQuery.of(context).size.height - 225.0;
+    final int amountOfCardsToShowPerPage = (characterListHeight / 100.0).floor();
 
     return CustomAnimatedContainer(
         defaultHeight: MediaQuery.of(context).size.height * 0.7,
-        child: Column(
-          children: [
-            const _Title(),
-            _ListNavigation(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage),
-            _CharacterList(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 18.0),
+          child: Column(
+            children: [
+              const _Title(),
+              _ListNavigation(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage),
+              _CharacterList(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage),
+            ],
+          ),
         ));
   }
 }
@@ -97,7 +103,7 @@ class _Title extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 80.0,
-      padding: const EdgeInsets.symmetric(vertical: 25.0),
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
       child: const Text("Personajes", style: TextStyle(fontFamily: 'StarJedi', fontSize: 17.0, letterSpacing: 1.0)),
     );
   }
@@ -113,7 +119,7 @@ class _ListNavigation extends StatelessWidget {
     final HomeListBloc homeListBloc = BlocProvider.of<HomeListBloc>(context);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 25.0),
+      padding: const EdgeInsets.only(bottom: 20.0),
       child: SizedBox(
         height: 35,
         child: BlocBuilder<HomeListBloc, HomeListState>(
