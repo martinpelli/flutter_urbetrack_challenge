@@ -14,14 +14,10 @@ class HomeListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double? listContainerHeight = BlocProvider.of<HomeListBloc>(context).listContainerHeight;
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: const [
-        _SearchField(),
-        Expanded(
-          child: _Body(),
-        ),
-      ],
+      children: [const _SearchField(), (listContainerHeight == null) ? const Expanded(child: _Body()) : const _Body()],
     );
   }
 }
@@ -77,15 +73,18 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double characterListHeight = MediaQuery.of(context).size.height - 225.0;
-    final int amountOfCardsToShowPerPage = (characterListHeight / 100.0).floor();
+    final int amountOfCardsToShowPerPage = (characterListHeight / 110.0).floor();
+
+    final listContainerHeight = BlocProvider.of<HomeListBloc>(context).listContainerHeight;
 
     return CustomAnimatedContainer(
-      defaultHeight: null,
+      defaultHeight: listContainerHeight,
       child: Column(
         children: [
           const _Title(),
           _ListNavigation(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage),
           _CharacterList(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage),
+          const SizedBox(height: 18.0)
         ],
       ),
     );
@@ -100,8 +99,8 @@ class _Title extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80.0,
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      height: 70.0,
+      padding: const EdgeInsets.only(top: 20.0),
       child: const Text("Personajes", style: TextStyle(fontFamily: 'StarJedi', fontSize: 17.0, letterSpacing: 1.0)),
     );
   }
@@ -201,6 +200,7 @@ class _CharacterList extends StatelessWidget {
                   controller: homeListBloc.pageController,
                   itemCount: totalAmountOfPages,
                   itemBuilder: (_, pageIndex) => ListView.separated(
+                      shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: amountOfCardsToShowPerPage,
                       itemBuilder: ((_, cardIndex) {

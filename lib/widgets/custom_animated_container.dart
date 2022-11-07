@@ -33,7 +33,7 @@ class CustomAnimatedContainerState extends State<CustomAnimatedContainer> with S
     final double? heightFromOtherWidget = BlocProvider.of<HomeListBloc>(context, listen: false).previousHeight;
 
     if (widget.defaultHeight != null) {
-      _initHeight = (heightFromOtherWidget == null) ? widget.defaultHeight! : heightFromOtherWidget;
+      _initHeight = heightFromOtherWidget;
       _finalHeight = widget.defaultHeight!;
       _animation = Tween(begin: _initHeight, end: _finalHeight).animate(CurvedAnimation(parent: _animController, curve: Curves.fastOutSlowIn));
       _animController.forward();
@@ -58,14 +58,17 @@ class CustomAnimatedContainerState extends State<CustomAnimatedContainer> with S
     return AnimatedBuilder(
         animation: _animController,
         child: CustomAnimatedOpacity(child: widget.child),
-        builder: (context, child) => Container(
-            key: _containerKey,
-            decoration: const BoxDecoration(
-              color: Color(0xff11181E),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
-            ),
-            height: (_animation != null) ? _animation!.value : null,
-            child: child));
+        builder: (context, child) {
+          if (_animation != null) {}
+          return Container(
+              key: _containerKey,
+              decoration: const BoxDecoration(
+                color: Color(0xff11181E),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
+              ),
+              height: (_animation != null) ? _animation!.value : null,
+              child: child);
+        });
   }
 
   void _getContainerHeigth(BuildContext context) {
@@ -74,5 +77,6 @@ class CustomAnimatedContainerState extends State<CustomAnimatedContainer> with S
     final double height = renderBox.size.height;
 
     BlocProvider.of<HomeListBloc>(context).previousHeight = height;
+    BlocProvider.of<HomeListBloc>(context).listContainerHeight = height;
   }
 }

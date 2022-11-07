@@ -10,6 +10,7 @@ part 'home_list_state.dart';
 class HomeListBloc extends HydratedBloc<HomeListEvent, HomeListState> {
   bool restorePage = false;
   double? previousHeight;
+  double? listContainerHeight;
 
   late PageController pageController;
   final TextEditingController searchController = TextEditingController();
