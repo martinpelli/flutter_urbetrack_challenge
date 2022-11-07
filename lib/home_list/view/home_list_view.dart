@@ -14,16 +14,13 @@ class HomeListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      physics: const NeverScrollableScrollPhysics(),
-      reverse: true,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: const [
-        _Body(),
-        SizedBox(height: 18.0),
         _SearchField(),
-        SizedBox(
-          height: 18.0,
-        )
+        Expanded(
+          child: _Body(),
+        ),
       ],
     );
   }
@@ -37,33 +34,36 @@ class _SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController searchController = BlocProvider.of<HomeListBloc>(context).searchController;
-    return CustomAnimatedOpacity(
-      child: BlocBuilder<HomeListBloc, HomeListState>(
-        buildWhen: (previous, current) => current.isSearching != previous.isSearching,
-        builder: (context, state) => Container(
-          height: 60.0,
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child: TextField(
-            controller: searchController,
-            cursorColor: Colors.black,
-            style: const TextStyle(color: Colors.black),
-            keyboardType: TextInputType.name,
-            autofocus: false,
-            onSubmitted: (_) => BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent()),
-            decoration: InputDecoration(
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Icon(Icons.search, size: 25, color: const Color(0xff273037).withOpacity(0.7)),
-                ),
-                suffixIcon: state.isSearching
-                    ? IconButton(
-                        onPressed: () {
-                          searchController.clear();
-                          BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent());
-                        },
-                        icon: Icon(Icons.clear, color: const Color(0xff273037).withOpacity(0.7)))
-                    : null,
-                labelText: "Buscar personaje..."),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      child: CustomAnimatedOpacity(
+        child: BlocBuilder<HomeListBloc, HomeListState>(
+          buildWhen: (previous, current) => current.isSearching != previous.isSearching,
+          builder: (context, state) => Container(
+            height: 60.0,
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: TextField(
+              controller: searchController,
+              cursorColor: Colors.black,
+              style: const TextStyle(color: Colors.black),
+              keyboardType: TextInputType.name,
+              autofocus: false,
+              onSubmitted: (_) => BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent()),
+              decoration: InputDecoration(
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Icon(Icons.search, size: 25, color: const Color(0xff273037).withOpacity(0.7)),
+                  ),
+                  suffixIcon: state.isSearching
+                      ? IconButton(
+                          onPressed: () {
+                            searchController.clear();
+                            BlocProvider.of<HomeListBloc>(context).add(SearchCharacterEvent());
+                          },
+                          icon: Icon(Icons.clear, color: const Color(0xff273037).withOpacity(0.7)))
+                      : null,
+                  labelText: "Buscar personaje..."),
+            ),
           ),
         ),
       ),
@@ -80,17 +80,15 @@ class _Body extends StatelessWidget {
     final int amountOfCardsToShowPerPage = (characterListHeight / 100.0).floor();
 
     return CustomAnimatedContainer(
-        defaultHeight: MediaQuery.of(context).size.height * 0.7,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 18.0),
-          child: Column(
-            children: [
-              const _Title(),
-              _ListNavigation(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage),
-              _CharacterList(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage),
-            ],
-          ),
-        ));
+      defaultHeight: null,
+      child: Column(
+        children: [
+          const _Title(),
+          _ListNavigation(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage),
+          _CharacterList(amountOfCardsToShowPerPage: amountOfCardsToShowPerPage),
+        ],
+      ),
+    );
   }
 }
 
@@ -119,7 +117,7 @@ class _ListNavigation extends StatelessWidget {
     final HomeListBloc homeListBloc = BlocProvider.of<HomeListBloc>(context);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0),
+      padding: const EdgeInsets.only(bottom: 18.0),
       child: SizedBox(
         height: 35,
         child: BlocBuilder<HomeListBloc, HomeListState>(

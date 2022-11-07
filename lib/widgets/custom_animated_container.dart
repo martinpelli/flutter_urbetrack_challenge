@@ -6,7 +6,7 @@ import '../home_list/bloc/home_list_bloc.dart';
 
 class CustomAnimatedContainer extends StatefulWidget {
   final Widget child;
-  final double defaultHeight;
+  final double? defaultHeight;
 
   const CustomAnimatedContainer({
     Key? key,
@@ -20,9 +20,9 @@ class CustomAnimatedContainer extends StatefulWidget {
 
 class CustomAnimatedContainerState extends State<CustomAnimatedContainer> with SingleTickerProviderStateMixin {
   late final AnimationController _animController;
-  late final Animation _animation;
-  late final double _initHeight;
-  late final double _finalHeight;
+  Animation? _animation;
+  double? _initHeight;
+  double? _finalHeight;
 
   final GlobalKey _containerKey = GlobalKey();
 
@@ -32,13 +32,17 @@ class CustomAnimatedContainerState extends State<CustomAnimatedContainer> with S
 
     final double? heightFromOtherWidget = BlocProvider.of<HomeListBloc>(context, listen: false).previousHeight;
 
-    _initHeight = (heightFromOtherWidget == null) ? widget.defaultHeight : heightFromOtherWidget;
-    _finalHeight = widget.defaultHeight;
-    _animation = Tween(begin: _initHeight, end: _finalHeight).animate(CurvedAnimation(parent: _animController, curve: Curves.fastOutSlowIn));
-
-    _animController.forward();
-
-    BlocProvider.of<HomeListBloc>(context).previousHeight = _finalHeight;
+    if (widget.defaultHeight != null) {
+      _initHeight = (heightFromOtherWidget == null) ? widget.defaultHeight! : heightFromOtherWidget;
+      _finalHeight = widget.defaultHeight!;
+      _animation = Tween(begin: _initHeight, end: _finalHeight).animate(CurvedAnimation(parent: _animController, curve: Curves.fastOutSlowIn));
+      _animController.forward();
+      BlocProvider.of<HomeListBloc>(context).previousHeight = _finalHeight;
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _getContainerHeigth(context);
+      });
+    }
 
     super.initState();
   }
@@ -60,7 +64,15 @@ class CustomAnimatedContainerState extends State<CustomAnimatedContainer> with S
               color: Color(0xff11181E),
               borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
             ),
-            height: _animation.value,
+            height: (_animation != null) ? _animation!.value : null,
             child: child));
+  }
+
+  void _getContainerHeigth(BuildContext context) {
+    final RenderBox renderBox = _containerKey.currentContext?.findRenderObject() as RenderBox;
+
+    final double height = renderBox.size.height;
+
+    BlocProvider.of<HomeListBloc>(context).previousHeight = height;
   }
 }
