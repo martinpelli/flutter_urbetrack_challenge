@@ -66,7 +66,7 @@ class CustomAnimatedContainerState extends State<CustomAnimatedContainer> with S
                 color: Color(0xff11181E),
                 borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
               ),
-              height: (_animation != null) ? _animation!.value : null,
+              height: (_animation != null) ? _animation!.value : MediaQuery.of(context).size.height - 240,
               child: child);
         });
   }

@@ -14,10 +14,9 @@ class HomeListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double? listContainerHeight = BlocProvider.of<HomeListBloc>(context).listContainerHeight;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [const _SearchField(), (listContainerHeight == null) ? const Expanded(child: _Body()) : const _Body()],
+    return ListView(
+      reverse: true,
+      children: const [_Body(), _SearchField()],
     );
   }
 }
@@ -131,8 +130,9 @@ class _ListNavigation extends StatelessWidget {
               final int currentAmountOfPages =
                   state.people != null && state.people!.count > 0 ? (state.people!.results.length / amountOfCardsToShowPerPage).ceil() : 1;
 
-              if (state.currentPage >= currentAmountOfPages && !state.isChangingPage && state.people != null)
+              if (state.currentPage >= currentAmountOfPages && !state.isChangingPage && state.people != null) {
                 BlocProvider.of<HomeListBloc>(context).add(GetPeopleEvent());
+              }
 
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

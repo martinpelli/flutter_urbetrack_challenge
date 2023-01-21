@@ -61,9 +61,9 @@ class HomeListBloc extends HydratedBloc<HomeListEvent, HomeListState> {
 
       final People people;
       if (state.isSearching) {
-        people = await ApiClient.getPeople('${state.currentPeoplePage}&search=${searchController.text}');
+        people = await ApiClient.getPeople(state.currentPeoplePage, searchText: searchController.text);
       } else {
-        people = await ApiClient.getPeople('${state.currentPeoplePage}');
+        people = await ApiClient.getPeople(state.currentPeoplePage);
       }
 
       if (state.currentPeoplePage > 1) {
