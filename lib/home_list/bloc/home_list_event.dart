@@ -17,7 +17,3 @@ class PreviousPageEvent extends HomeListEvent {
 class SearchCharacterEvent extends HomeListEvent {}
 
 class GetPeopleEvent extends HomeListEvent {}
-
-class RemoveControllerEvent extends HomeListEvent {}
-
-class RestorePageEvent extends HomeListEvent {}

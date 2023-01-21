@@ -21,7 +21,7 @@ class CharacterCard extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 5.0),
           onTap: () {
             BlocProvider.of<NavigationBloc>(context).add(GoToHomeDetailEvent(characterId: index, character: character));
-            BlocProvider.of<HomeListBloc>(context).add(RemoveControllerEvent());
+            BlocProvider.of<HomeListBloc>(context).removeController();
           },
           leading: const Padding(
               padding: EdgeInsets.only(left: 10.0),

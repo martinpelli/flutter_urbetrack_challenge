@@ -62,7 +62,7 @@ class _TopBar extends StatelessWidget with PreferredSizeWidget {
                 padding: const EdgeInsets.only(left: 15.0),
                 onPressed: () {
                   BlocProvider.of<NavigationBloc>(context).add(PopHomeDetailEvent());
-                  BlocProvider.of<HomeListBloc>(context).add(RestorePageEvent());
+                  BlocProvider.of<HomeListBloc>(context).restoreController();
                 },
                 icon: const CustomAnimatedOpacity(child: Icon(Icons.arrow_back_ios)))
             : null,
@@ -93,9 +93,9 @@ class _BottomBar extends StatelessWidget {
             currentIndex: state.currentNavIndex,
             onTap: (value) {
               if (value == 0) {
-                BlocProvider.of<HomeListBloc>(context).add(RestorePageEvent());
+                BlocProvider.of<HomeListBloc>(context).restoreController();
               } else {
-                BlocProvider.of<HomeListBloc>(context).add(RemoveControllerEvent());
+                BlocProvider.of<HomeListBloc>(context).removeController();
               }
               BlocProvider.of<NavigationBloc>(context).add(ChangePageEvent(navIndex: value));
             },

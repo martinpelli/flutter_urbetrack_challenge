@@ -6,17 +6,12 @@ part 'navigation_state.dart';
 
 class NavigationBloc extends HydratedBloc<NavigationEvent, NavigationState> {
   NavigationBloc() : super(NavigationInitialState()) {
-    on<GoToHomeDetailEvent>((event, emit) {
-      emit(state.copyWith(currentNavIndex: state.currentNavIndex, characterId: event.characterId, character: event.character));
-    });
+    on<GoToHomeDetailEvent>(
+        (event, emit) => emit(state.copyWith(currentNavIndex: state.currentNavIndex, characterId: event.characterId, character: event.character)));
 
-    on<PopHomeDetailEvent>((event, emit) {
-      emit(NavigationInitialState());
-    });
+    on<PopHomeDetailEvent>((event, emit) => emit(NavigationInitialState()));
 
-    on<ChangePageEvent>(((event, emit) {
-      emit(state.copyWith(currentNavIndex: event.navIndex));
-    }));
+    on<ChangePageEvent>(((event, emit) => emit(state.copyWith(currentNavIndex: event.navIndex))));
   }
 
   @override
